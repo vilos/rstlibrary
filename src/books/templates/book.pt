@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<metal:block use-macro="base.macros.master">
+<metal:block fill-slot="content">  
+  <h1 class="toc">${book.title}</h1>
+  <div id="colophon" tal:condition="book">
+  <tal:block define="title book.title;
+                     author book.docinfo.author;
+                     publisher book.docinfo.publisher;
+                     year book.docinfo.year">
+    <p class="byline" tal:condition="author">by ${author}</p>
+    <p>Welcome to the home of ${title} <tal:block tal:condition="author">  by ${author}</tal:block>.<br/>
+    <tal:block condition="publisher or year">First published
+      <tal:block condition="publisher">by ${publisher}</tal:block>
+      <tal:block condition="year">in ${year}</tal:block>.
+    </tal:block><br/>
+    <tal:block condition="author">Reprinted with permission of ${author}.</tal:block></p>
+  </tal:block>
+  </div>
+  <h2>Table of Contents</h2>
+    <div tal:define="sections book.subsections()" tal:condition="sections" id="sections">
+      <ul>
+        <tal:block repeat="section sections">            
+          <li class="${section.classes}">
+            <tal:block condition="not section.hidden">
+              <a tal:condition="section.isleaf" href="${base_url(section)}">${section.title}</a>
+              <div tal:condition="not section.isleaf" class="section">${section.title}</div>
+              <ul tal:define="subsections section.subsections()" tal:condition="subsections">
+                  <tal:block repeat="section2 subsections">
+                  <li tal:condition="not section2.hidden">
+                    <a href="${base_url(section2)}">
+                      ${section2.title}</a>
+                  </li>
+                  </tal:block>
+              </ul>
+            </tal:block>
+          </li>
+        </tal:block>
+      </ul>
+    </div>
+</metal:block>      
+</metal:block>
+</html>

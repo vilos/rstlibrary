@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<metal:block use-macro="base.macros.master">
+  <metal:block fill-slot="content">
+  <div id="uplink">
+    <a href="${uplink.url}" title="${uplink.title}"> Home </a>
+  </div>
+  <div class="document">
+    <div tal:replace="structure contents">contents</div>
+  </div>
+  <div id="bookexcerpt">Excerpt from <a href="${uplink.url}">${uplink.title}</a> by ${uplink.author}</div>
+  <div id="listingBar"  tal:condition="nextlink or prevlink">
+      <span tal:condition="prevlink" class="listingPrevious">
+        <a href="${prevlink.url}" tabindex="1">${prevlink.title}</a>
+      </span>
+      <span tal:condition="nextlink" class="listingNext">
+        <a href="${nextlink.url}" tabindex="2">${nextlink.title}</a>
+      </span>
+  </div>
+  </metal:block>  
+</metal:block>
+</html>

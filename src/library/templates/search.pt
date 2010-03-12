@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<metal:block use-macro="base.macros.master">
+
+  <metal:block fill-slot="search"></metal:block>
+  
+  <metal:block fill-slot="title">
+  <div id="title">
+    <h1>Search Sri Chinmoy Library</h1>
+  </div>
+  </metal:block>
+  
+  <metal:block fill-slot="content">
+    <form action="/search" name="searchform" method="post">
+        <label class="" for="search_input">
+            Fulltext Search 
+        </label>
+        <div class="">
+            <input type="text" title="Search Site" value="${text}" size="25" name="text" id="search_input" />
+            <input type="submit" value="Search" name="form.submitted" class="search_button" />
+        </div>
+    </form>
+    <div class="small" tal:condition="None"><a href="/search">Advanced search</a></div>
+    
+    <div id="results" tal:condition="results" >
+        <ul>
+            <li tal:repeat="result results">
+              <div class="link">
+                <a href="${result.id}">
+                    ${result.title}
+                </a>
+              </div>
+              <div class="text" tal:content="structure result.summary">summary</div>
+            </li>
+        </ul>
+    </div>
+    <div id="paginator" tal:content="structure pagebar">~2~</div>
+    
+  </metal:block>
+</metal:block>
+</html>

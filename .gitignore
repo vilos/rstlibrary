@@ -1,0 +1,13 @@
+# python
+*.pyc
+*.pyo
+*.egg-info
+#
+.coverage
+# eclipse
+.project
+.pydevproject
+.settings
+#
+paster
+

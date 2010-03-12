@@ -1,0 +1,33 @@
+<configure xmlns="http://namespaces.repoze.org/bfg">
+
+  <!-- this must be included for the view declarations to work -->
+  <include package="repoze.bfg.includes" />
+
+  <include package="books" />
+  <include package="fscontent" />
+
+  <route path="/books*traverse" 
+    name="books" 
+    view=".views.ListView" 
+    factory=".models.Library"
+    renderer="templates/list.pt"
+  />
+
+  <route path="/search"
+    name="search"
+    view=".views.SearchView"
+    renderer="templates/search.pt">
+  
+  </route>  
+  
+  <notfound 
+    view=".views.NotFoundView" 
+    renderer="templates/404.pt"/>
+
+  <static
+     name="static"
+     path="templates/static"
+     />
+  
+  
+</configure>

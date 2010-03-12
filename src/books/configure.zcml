@@ -1,0 +1,17 @@
+<configure xmlns="http://namespaces.repoze.org/bfg">
+
+  <view
+    route_name="books"
+    context=".interfaces.IBook"
+    view=".views.BookView"
+    renderer="templates/book.pt"
+   />
+
+  <view
+    route_name="books"
+    context=".interfaces.ISection"
+    view=".views.PageView"
+    renderer="templates/page.pt"
+   />
+   
+</configure>

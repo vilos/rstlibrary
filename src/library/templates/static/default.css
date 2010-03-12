@@ -1,0 +1,214 @@
+html { font-size:100.01%; }
+body {
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  font-size: 11pt;
+  line-height: 150%;
+  font-family:  Georgia, "Times New Roman", Times, serif;
+  text-align: justify;
+  color: #555;
+}
+/* Layout */
+#header {
+  width: 713px;
+  height: 120px;
+  margin: 5px auto 0 auto;
+  border: 1px solid #CCCCCC;
+  border-bottom: none;
+}
+#colorbar{
+  height: 10px;
+  background:#FF9900;
+}
+#inheader {
+  margin: 0 auto;
+  padding: 0 25px;
+}
+#logo {
+  float: left;
+}
+#search {
+  float: right;
+  margin-top: 12px;
+}
+#wrapper {
+  clear: both;
+  margin: 0 auto;
+  padding: 0;
+  width: 713px;
+  border: 1px solid #CCCCCC;
+  border-top: none;	
+}
+#page {
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 0 2.5em;	
+}
+/* headings */
+h1,h2,h3,h4,h5,h6 {
+  margin: 0;
+  font-weight: normal;
+  color: #214ea6;
+}
+h1 { font-size: 2em; margin-bottom: 1em; }
+h2 { font-size: 1.5em; margin-bottom: 0.75em;}
+h3 { font-size: 1.2em; font-weight: bold; margin-bottom: 0.75em;}
+h4 { font-size: 1em; font-weight: bold; margin-bottom: 0.75em;}
+p, ul, ol {
+  margin: 0 0 2em 0;
+  text-align: justify;
+}
+.small {
+  font-size: 0.8em;
+  line-height: 1.875em;
+  margin-bottom: 1.875em;
+}
+
+a {
+  color: #66cc33;
+  text-decoration: none;
+}
+
+a:hover, a:active {
+  text-decoration: underline;
+}
+a:visited {}
+img {
+  border: none;
+}
+img.left {
+  float: left;
+  margin-right: 15px;
+}
+img.right {
+  float: right;
+  margin-left: 15px;
+}
+form { margin: 0; padding: 0; }
+/* Alpha navigation */
+#alpha_navigation {
+  margin: 2em 0;
+}
+#alpha_navigation #alphas{
+  text-align:center;
+  font-size: 12pt;
+}
+#alpha_navigation #alphas a.current {
+  font-weight: bold;
+  font-size: 14pt;
+}
+/* Menu */
+.text_menu {
+  clear: both;
+  margin-top: 4em;
+  margin-bottom: 2em;
+  font-size: 0.9em;
+  text-align:center;
+}
+/* Books */
+h1.toc, div.document h1 {
+  text-align: center;
+  font-style: italic;
+  margin: 1em 0em 2em 0em;
+}
+#booklist ul, #sections ul {
+  list-style-type: none;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+  line-height: 180%;
+}
+#sections li .section {
+  font-size: 1.2em;
+}
+#colophon p {
+  text-align: center;
+  color: #999999;
+  font-size: 0.9em;
+}
+#colophon p.byline {
+  font-size: 1.1em;
+  color: #333333;
+  margin-bottom: 0.5em;
+}
+#bookexcerpt { 
+  text-align: center;
+  font-size: .8em;
+}
+#listingBar {
+  height: 1em;
+  margin: 1em 0;
+}
+#listingBar .listingPrevious, #listingBar .listingNext {
+  padding: 0 1em;
+  line-height: 110%;
+  max-width: 45%;
+  min-width: 30%;
+}
+#listingBar .listingPrevious {
+  float:left;
+  text-align: left;
+  background: url(/static/img/arrowLeft.gif) no-repeat;
+  background-position-x: 0%;
+  background-position-y: 50%;
+}
+#listingBar .listingNext {
+  float: right;
+  text-align: right;
+  background: url(/static/img/arrowRight.gif) no-repeat;
+  background-position-x: 100%;
+  background-position-y: 50%;
+}
+#listingBar a {
+  text-decoration: none;
+  font-size: 0.9em;
+}
+.document {
+  margin: 1em 0 5em 0;
+}
+.genre_poem {
+  padding: 0 5em;
+}
+div.document .genre_poem h1 {
+  text-align: left;
+}
+p.poem {
+  font-size: 1.15em;
+  line-height: 160%;
+}
+/* Search */
+#results {
+  margin-top: 3em;
+}
+#results ul {
+  list-style: none;
+  padding: 0;
+}
+#results .text {
+  font-size: 0.9em;   
+  line-height: 1.8em;
+  padding-left: 1em;
+  margin-bottom: 0.9em;
+}
+#paginator {
+  text-align: center;
+  font-family: Helvetica, Arial, sans-serif;
+}
+#paginator a, #paginator span {
+  margin: 0 2px;
+}
+#paginator .pager_curpage {
+  font-weight:bold;
+  color: #ff9900;
+}
+/* Footer */
+#footer {
+  width: 713px;
+  margin: 0 auto;
+  padding: 1.7em 0 1em 0;
+}
+#footer p {
+  margin-bottom: 1.3em;
+  text-align: center;
+  font-size: small;
+}

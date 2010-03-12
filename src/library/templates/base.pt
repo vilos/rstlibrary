@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<metal:block define-macro="master">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>${pagetitle}</title>
+  <link href="${request.application_url}/static/default.css" rel="stylesheet" type="text/css" />
+  <metal:block define-slot="header">
+  </metal:block>
+</head>
+<body>
+
+<!-- start header -->
+<div id="header">
+  <div id="colorbar"></div>
+  <div id="inheader">
+    <div id="logo">
+      <a href="/"><img src="/static/img/liblogo.gif" alt="Sri Chinmoy Library Logo"/></a>
+    </div>
+    <metal:block define-slot="search">
+    <div id="search">
+      <form id="search_form" action="/search" name="searchform" method="post">
+        <div class="">
+          <input type="text" title="Search Site" size="25" name="text" id="search_input" />
+          <input type="submit" value="Search" name="form.submitted" class="search_button" />
+        </div>
+      </form>
+      <div class="small"><a href="/search">Advanced search</a></div>
+    </div>
+    </metal:block>
+  </div>
+</div>
+<!-- end header -->
+<div id="wrapper">
+  <!-- start page -->
+  <div id="page">
+    <metal:block define-slot="title"></metal:block>
+    
+    <metal:block define-slot="alphas"></metal:block>
+    
+    <!-- start content -->  
+    <div id="content">
+    <metal:block define-slot="content">  
+    </metal:block>
+    </div>
+    <!-- end content -->
+    
+    <metal:block define-slot="menu">
+      <metal:block use-macro="base.macros.menu"/>
+    </metal:block>
+      
+  </div>
+  <!-- end page -->
+</div>
+<!-- end wrapper -->
+<!-- start footer -->
+<div id="footer">
+  <p><a href="/copyright"><img src="/static/img/cc.jpg" alt="Copyright"/></a></p>
+  <p>© Copyright 2009, Sri Chinmoy | Hosted by Vasudeva Server</p>
+</div>
+<!-- end footer -->
+</body>
+</metal:block>
+</html> 
+
+<metal:block define-macro="alphas">
+  <div id="alpha_navigation">
+  <h3>Sri Chinmoy library volumes by title</h3>
+  <metal:block use-macro="base.macros.do_alphas"/>
+  </div>
+</metal:block>
+
+<metal:block define-macro="do_alphas">
+  <div id="alphas" tal:condition="alphas">
+    <tal:block repeat="a alphas">
+      <a href="/books?alpha=${a}" class="${a==alpha and 'current' or ''}">${a}</a>
+      <tal:block condition="not repeat.a.end">-</tal:block>
+    </tal:block>
+  </div>
+</metal:block>
+
+<metal:block define-macro="menu">
+  <div class="text_menu">
+    <span>[<a href="/">Home</a>] - </span>
+    <span>[<a href="/sri_chinmoy">Sri Chinmoy</a>] - </span>
+    <span>[<a href="/selected"> Selected books</a>] - </span>
+    <span>[<a href="/search">Search</a>] - </span>
+    <span>[<a href="/new">Log In</a>]</span>
+  </div>
+</metal:block>

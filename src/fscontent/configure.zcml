@@ -1,0 +1,30 @@
+<configure xmlns="http://namespaces.repoze.org/bfg">
+
+  <!--  filesystem content -->
+
+  <view
+    context=".interfaces.IDirectory" 
+    view=".views.directory_view"
+    />
+
+
+  <view 
+    for=".interfaces.IFile" 
+    view=".views.restructured_text_view"
+    custom_predicates=".views.isrst"
+    renderer="templates/content.pt"
+    />
+
+  <view 
+    for=".interfaces.IFile" 
+    view=".views.html_view"
+    custom_predicates=".views.ishtml"
+    renderer="templates/content.pt"
+    />
+
+  <view 
+    for=".interfaces.IFile" 
+    view=".views.raw_view"
+    />
+
+</configure>
