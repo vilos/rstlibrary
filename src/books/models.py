@@ -110,6 +110,8 @@ class Section(object):
             return self.parent.previous_leaf()
             
     def astext(self):
+        if self.hidden:
+            return u""
         doctree = self.root.doctree
         if not isinstance(self, Book):
             doctree = doctree.copy()
@@ -117,6 +119,8 @@ class Section(object):
         return extract(doctree)
     
     def ashtml(self):
+        if self.hidden:
+            return u""
         doctree = self.book.doctree
         if not isinstance(self, Book):
             doctree = doctree.copy()

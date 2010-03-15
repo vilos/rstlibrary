@@ -13,10 +13,10 @@
   <div id="bookexcerpt">Excerpt from <a href="${uplink.url}">${uplink.title}</a> by ${uplink.author}</div>
   <div id="listingBar"  tal:condition="nextlink or prevlink">
       <span tal:condition="prevlink" class="listingPrevious">
-        <a href="${prevlink.url}" tabindex="1">${prevlink.title}</a>
+        <a href="${prevlink.url}" title="${prevlink.title}" tabindex="1">Previous</a>
       </span>
       <span tal:condition="nextlink" class="listingNext">
-        <a href="${nextlink.url}" tabindex="2">${nextlink.title}</a>
+        <a href="${nextlink.url}" title="${nextlink.title}" tabindex="2">Next</a>
       </span>
   </div>
   </metal:block>  

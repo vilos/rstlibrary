@@ -134,6 +134,7 @@ h1.toc, div.document h1 {
 #listingBar {
   height: 1em;
   margin: 1em 0;
+  text-align: right;
 }
 #listingBar .listingPrevious, #listingBar .listingNext {
   padding: 0 1em;
@@ -142,15 +143,15 @@ h1.toc, div.document h1 {
   min-width: 30%;
 }
 #listingBar .listingPrevious {
-  float:left;
-  text-align: left;
+  xfloat:right;
+  xtext-align: left;
   background: url(/static/img/arrowLeft.gif) no-repeat;
   background-position-x: 0%;
   background-position-y: 50%;
 }
 #listingBar .listingNext {
-  float: right;
-  text-align: right;
+  xfloat: right;
+  xtext-align: right;
   background: url(/static/img/arrowRight.gif) no-repeat;
   background-position-x: 100%;
   background-position-y: 50%;
