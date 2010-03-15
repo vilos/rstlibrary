@@ -11,56 +11,58 @@
   </metal:block>
 </head>
 <body>
-
-<!-- start header -->
-<div id="header">
-  <div id="colorbar"></div>
-  <div id="inheader">
-    <div id="logo">
-      <a href="/"><img src="/static/img/liblogo.gif" alt="Sri Chinmoy Library Logo"/></a>
+<div id="container">
+  <!-- start header -->
+  <div id="header">
+    <div id="colorbar"></div>
+    <div id="inheader">
+      <div id="logo">
+        <a href="/"><img src="/static/img/liblogo.gif" alt="Sri Chinmoy Library Logo"/></a>
+      </div>
+      <metal:block define-slot="search">
+      <div id="search">
+        <form id="search_form" action="/search" name="searchform" method="post">
+          <div class="">
+            <input type="text" title="Search Site" size="25" name="text" id="search_input" />
+            <input type="submit" value="Search" name="form.submitted" class="search_button" />
+          </div>
+        </form>
+        <div class="small"><a href="/search">Advanced search</a></div>
+      </div>
+      </metal:block>
     </div>
-    <metal:block define-slot="search">
-    <div id="search">
-      <form id="search_form" action="/search" name="searchform" method="post">
-        <div class="">
-          <input type="text" title="Search Site" size="25" name="text" id="search_input" />
-          <input type="submit" value="Search" name="form.submitted" class="search_button" />
-        </div>
-      </form>
-      <div class="small"><a href="/search">Advanced search</a></div>
-    </div>
-    </metal:block>
   </div>
-</div>
-<!-- end header -->
-<div id="wrapper">
-  <!-- start page -->
-  <div id="page">
-    <metal:block define-slot="title"></metal:block>
-    
-    <metal:block define-slot="alphas"></metal:block>
-    
-    <!-- start content -->  
-    <div id="content">
-    <metal:block define-slot="content">  
-    </metal:block>
-    </div>
-    <!-- end content -->
-    
-    <metal:block define-slot="menu">
-      <metal:block use-macro="base.macros.menu"/>
-    </metal:block>
+  <!-- end header -->
+  <div id="wrapper">
+    <!-- start page -->
+    <div id="page">
+      <metal:block define-slot="title"></metal:block>
       
+      <metal:block define-slot="alphas"></metal:block>
+      
+      <!-- start content -->  
+      <div id="content">
+      <metal:block define-slot="content">  
+      </metal:block>
+      </div>
+      <!-- end content -->
+      
+      <metal:block define-slot="menu">
+        <metal:block use-macro="base.macros.menu"/>
+      </metal:block>
+        
+    </div>
+    <!-- end page -->
   </div>
-  <!-- end page -->
+  <!-- end wrapper -->
+  <!-- start footer -->
+  <div id="footer">
+    <p><a href="/copyright"><img src="/static/img/cc.jpg" alt="Copyright"/></a></p>
+    <p>© Copyright 2009, Sri Chinmoy | Hosted by Vasudeva Server</p>
+  </div>
+  <!-- end footer -->
 </div>
-<!-- end wrapper -->
-<!-- start footer -->
-<div id="footer">
-  <p><a href="/copyright"><img src="/static/img/cc.jpg" alt="Copyright"/></a></p>
-  <p>© Copyright 2009, Sri Chinmoy | Hosted by Vasudeva Server</p>
-</div>
-<!-- end footer -->
+<!-- end container -->
 </body>
 </metal:block>
 </html> 
