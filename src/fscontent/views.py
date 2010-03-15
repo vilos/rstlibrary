@@ -4,11 +4,12 @@ import os, re
 import mimetypes
 from webob import Response
 from webob.exc import HTTPFound
+from zope.interface import providedBy
+from repoze.bfg.interfaces import IRequest, IView
 from repoze.bfg.exceptions import NotFound
 
 from library.views import BaseView 
 from restructured import publish_source
-
 
 def directory_view(context, request):
     path_info = request.environ['PATH_INFO']
@@ -21,9 +22,9 @@ def directory_view(context, request):
         try:
             index = context[name]
         except KeyError:
-            continue
-        return HTTPFound(location=path_info + name)
-        #return file_view(index, request)
+            continue        
+        file_view = request.registry.adapters.lookup((IRequest, providedBy(index)), IView, name='', default=None)
+        return file_view(index, request)
     raise NotFound('No default view for %s' % os.path.basename(context.path))
 
 reh1 = re.compile('^<h1>(?P<title>[-\w\s]+)</h1>', re.I)
