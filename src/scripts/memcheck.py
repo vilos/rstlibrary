@@ -1,4 +1,4 @@
-import psutil
+import sys, psutil
 
 HUP = 1
 
@@ -17,14 +17,14 @@ def get_ps(name, username=''):
     return ps
 
     
-def check(rsslimit=900*1024*1024):
+def check(rsslimit):
     # sum rss of given processes
     rss = 0
     ps = get_ps(name='uwsgi', username='vslib')
     for p in ps:
         rss += int(p.get_memory_info()[0])
         
-    if rss > rsslimit:
+    if rss > rsslimit*1024*1024:
         print '%dMB' % mb(rss)
         # find the parent one
         for p in ps:
@@ -45,4 +45,6 @@ def info():
     
 if __name__=='__main__':
     info()
-    check()
+    if len(sys.argv)>1:
+        limit = sys.argv[1]
+        check(limit)
