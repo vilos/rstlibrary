@@ -4,12 +4,14 @@ HUP = 1
 
 def get_ps(name, username=''):
     
+    ps = []
     for p in psutil.process_iter():
         if p.name != name:
             continue
         if username and p.username != username:
             continue
-        yield p
+        ps.append(p)
+    return ps
 
     
 def check(rsslimit=900*1024*1024):
@@ -20,6 +22,7 @@ def check(rsslimit=900*1024*1024):
         rss += int(p.get_memory_info()[0])
         
     if rss > rsslimit:
+        print '%dMB' % (rss/(1024*1024))
         # find the parent one
         for p in ps:
             pp = p.parent
