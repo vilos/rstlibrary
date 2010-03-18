@@ -43,7 +43,7 @@ def info():
     for p in ps:
         rss, vms = p.get_memory_info()
         total += rss 
-        print "%s\t%s\t%s%%\t%s - \t%s" % (p.pid, p.ppid, p.get_cpu_percent(), mb(rss), mb(vms)) 
+        print "%s\t%s\t%0.2f%%\t%s - \t%s" % (p.pid, p.ppid, p.get_cpu_percent(), mb(rss), mb(vms)) 
     print 'total RSS: %d' % mb(total)
     
 if __name__=='__main__':
