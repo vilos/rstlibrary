@@ -44,7 +44,11 @@ def info():
         rss, vms = p.get_memory_info()
         total += rss 
         print "%s\t%s\t%0.2f%%\t%s - \t%s" % (p.pid, p.ppid, p.get_cpu_percent(), mb(rss), mb(vms)) 
-    print 'total RSS: %d' % mb(total)
+    print 'total watched RSS: %d' % mb(total)
+    used, all, avail = mb(psutil.used_phymem()), mb(psutil.TOTAL_PHYMEM), mb(psutil.avail_phymem())
+    print 'Used memory %dMB out of %dMB' %  (used, all)
+    print 'Available memory %dMB' % avail
+
     
 if __name__=='__main__':
     info()
