@@ -17,7 +17,7 @@ def check(rsslimit=900*1024*1024):
     rss = 0
     ps = get_ps(name='uwsgi', username='vslib')
     for p in ps:
-        rss += p.get_memory_info()[0]
+        rss += int(p.get_memory_info()[0])
         
     if rss > rsslimit:
         # find the parent one
@@ -28,7 +28,7 @@ def check(rsslimit=900*1024*1024):
                 pp.kill(HUP)
                 print 'process %s restarted' % pp.id
                 return
-    print 'OK - %dMB' % int(rss)/(1024*1024)
+    print 'OK - %dMB' % (rss/(1024*1024))
                  
 def info():
     ps = get_ps(name='uwsgi', username='vslib')
