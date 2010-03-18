@@ -28,7 +28,7 @@ def check(rsslimit=900*1024*1024):
                 pp.kill(HUP)
                 print 'process %s restarted' % pp.id
                 return
-    print 'OK - %sMB' % rss/(1024*1024)
+    print 'OK - %dMB' % int(rss)/(1024*1024)
                  
 def info():
     ps = get_ps(name='uwsgi', username='vslib')
