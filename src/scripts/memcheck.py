@@ -39,9 +39,12 @@ def check(rsslimit):
 def info():
     ps = get_ps(name='uwsgi', username='vslib')
     print "PID,\tPPID,\tCPU,\tRSS - \tVMS"
+    total = 0
     for p in ps:
         rss, vms = p.get_memory_info()
+        total += rss 
         print "%s\t%s\t%s%%\t%s - \t%s" % (p.pid, p.ppid, p.get_cpu_percent(), mb(rss), mb(vms)) 
+    print 'total RSS: %d' % mb(total)
     
 if __name__=='__main__':
     info()
