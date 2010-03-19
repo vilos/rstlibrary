@@ -89,6 +89,6 @@
     <span>[<a href="/sri_chinmoy">Sri Chinmoy</a>] - </span>
     <span>[<a href="/selected"> Selected books</a>] - </span>
     <span>[<a href="/search">Search</a>] - </span>
-    <span>[<a href="/new">Log In</a>]</span>
+    <span>[<a href="http://admin.srichinmoylibrary.com/new">Log In</a>]</span>
   </div>
 </metal:block>
