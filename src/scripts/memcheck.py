@@ -53,5 +53,5 @@ def info():
 if __name__=='__main__':
     info()
     if len(sys.argv)>1:
-        limit = sys.argv[1]
+        limit = int(sys.argv[1])
         check(limit)
