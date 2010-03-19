@@ -2,7 +2,7 @@
 from apscheduler.scheduler import Scheduler
 from datetime import datetime
 from time import sleep
-from memcheck import check
+from memcheck import check, info
 
 import signal
 
@@ -22,8 +22,11 @@ def shutdown(signl, frme):
     #log.info('Catched signal %r. Processing will stop.', signl)
     return 0
 
+def get_info(signl, frme):
+    info()
+    
 signal.signal(signal.SIGINT, shutdown )
-
+signal.signal(signal.SIGUSR1, get_info)
 
 def job_function():
     #print "Hello World"

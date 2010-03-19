@@ -6,7 +6,7 @@ HUP = 1
 def mb(size):
     return size/(1024*1024)
 
-def get_ps(name, username=''):
+def get_ps(name='uwsgi', username='vslib'):
     
     ps = []
     for p in psutil.process_iter():
@@ -21,7 +21,7 @@ def get_ps(name, username=''):
 def check(rsslimit=1500):
     # sum rss of given processes
     rss = 0
-    ps = get_ps(name='uwsgi', username='vslib')
+    ps = get_ps()
     for p in ps:
         rss += int(p.get_memory_info()[0])
     
@@ -41,7 +41,7 @@ def check(rsslimit=1500):
     print '- %dMB, OK' % mb(rss)
                  
 def info():
-    ps = get_ps(name='uwsgi', username='vslib')
+    ps = get_ps()
     print "PID,\tPPID,\tCPU,\tRSS - \tVMS"
     total = 0
     for p in ps:
