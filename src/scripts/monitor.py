@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from apscheduler.scheduler import Scheduler
 from datetime import datetime
 from time import sleep
