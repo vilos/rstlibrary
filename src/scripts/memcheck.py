@@ -1,4 +1,5 @@
 import sys, psutil
+from datetime import datetime
 
 HUP = 1
 
@@ -23,9 +24,12 @@ def check(rsslimit):
     ps = get_ps(name='uwsgi', username='vslib')
     for p in ps:
         rss += int(p.get_memory_info()[0])
-        
+    
+    dt = datetime.now()
+    print dt.strftime("%d. %B %Y %H:%M:%S"),
+    
     if rss > rsslimit*1024*1024:
-        print '%dMB' % mb(rss)
+        print '- %dMB' % mb(rss),
         # find the parent one
         for p in ps:
             pp = p.parent
@@ -34,7 +38,7 @@ def check(rsslimit):
                 pp.kill(HUP)
                 print 'process %s restarted' % pp.pid
                 return
-    print 'OK - %dMB' % mb(rss)
+    print '- %dMB, OK' % mb(rss)
                  
 def info():
     ps = get_ps(name='uwsgi', username='vslib')
