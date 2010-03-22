@@ -56,7 +56,7 @@ class LRUBase(SimpleBase):
     
     def __init__(self, engine, **kw):
         super(LRUBase, self).__init__(engine, **kw)
-        self._max_entries = kw.get('max_entries', 30)
+        self._max_entries = int(kw.get('max_entries', 30))
         self._hits = 0
         self._misses = 0
         self._queue = deque()
