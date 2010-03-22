@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys, psutil
 from datetime import datetime
 
@@ -18,7 +19,7 @@ def get_ps(name='uwsgi', username='vslib'):
     return ps
 
     
-def check(rsslimit=1500):
+def check(rsslimit=1200):
     # sum rss of given processes
     rss = 0
     ps = get_ps()
