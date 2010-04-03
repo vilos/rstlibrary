@@ -202,7 +202,7 @@ class Book(Section):
                 result[key] = value
         return result
     
-def get_book(name, parent):
+def get_book(name, parent=None):
     if name in getUtility(ISource):
         return Book(name, parent)
     else:
