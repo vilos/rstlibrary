@@ -1,6 +1,6 @@
-from repoze.bfg.traversal import find_root
-from repoze.bfg.url import model_url
+from simplejson import loads
 from library.views import BaseView
+from models import get_book
 
 class BookView(BaseView):
     
@@ -44,4 +44,24 @@ class PageView(BaseView):
             uplink=uplink
             )
         return super(PageView, self).__call__(**data)
-    
+
+
+def update_view(request):
+    json = loads(request.body)
+    bookid = json.get('bookid', None)
+    if not bookid:
+        return dict(error="Missing bookid parameter.")
+
+    try:
+        book = get_book(bookid)
+    except KeyError:
+        return dict(error="Book %s not found." % bookid)
+
+    try:
+        del book._store[book.id]
+    except KeyError:
+        # not pickled - ignore
+        pass
+    # load from source
+    book.doctree
+    return {'result': 'Book %s invalidated.' % book.id }

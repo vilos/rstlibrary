@@ -302,11 +302,13 @@ class Store(BaseStore):
 
     def __delitem__(self, key):
         '''Deletes an item from shove.'''
+        
+        self.sync()
+        del self._store[key]
         try:
             del self._cache[key]
         except KeyError: pass
-        self.sync()
-        del self._store[key]
+
 
     def keys(self):
         '''Returns a list of keys in shove.'''

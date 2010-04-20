@@ -14,4 +14,11 @@
     renderer="templates/page.pt"
    />
    
+  <route
+    path="/invalidate"
+    name="invalidate"
+    view=".views.update_view"
+    renderer="json"
+   />
+   
 </configure>
