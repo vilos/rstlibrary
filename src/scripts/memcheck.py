@@ -19,7 +19,7 @@ def get_ps(name='uwsgi', username='vslib'):
     return ps
 
     
-def check(rsslimit=1200):
+def check(rsslimit=500):
     # sum rss of given processes
     rss = 0
     ps = get_ps()
@@ -39,7 +39,7 @@ def check(rsslimit=1200):
                 pp.kill(HUP)
                 print 'process %s restarted' % pp.pid
                 return
-    print '- %dMB, OK' % mb(rss)
+#    print '- %dMB, OK' % mb(rss)
                  
 def info():
     ps = get_ps()
