@@ -7,6 +7,8 @@
         (create new pickle)
 """
 import sys, os, subprocess
+from log import log
+
 parent = os.path.dirname
 base = parent(parent(parent(parent(parent(__file__)))))
 wcbase = os.path.join(base, 'var', 'vslib')
@@ -35,8 +37,9 @@ class WorkingCopy(object):
         
         
 def update(bookid):
-    
-    WorkingCopy().svn_up(bookid)
+    wc = WorkingCopy() 
+    log("svn up: %s", wc.wc_path(bookid))
+    return wc.svn_up(bookid)
     #Cache(cachebase).invalidate(bookid)
 
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # A reaction to: http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/552751
+import sys
 from webob import Request, Response
 from webob import exc
 from simplejson import loads, dumps
 from wsgiproxy.exactproxy import proxy_exact_request
-import sys
-
+from log import log
 
 class ServerProxy(object):
     """
@@ -111,8 +111,9 @@ class Fault(Exception):
          
 def invalidate(bookid, url='http://www.srichinmoylibrary.com/invalidate'):
     data = dict(bookid=bookid)
-    client = Client(url)
     
+    log("jsonrpc - sending: %r", data)
+    client = Client(url)
     return client.send(data)
 
     
