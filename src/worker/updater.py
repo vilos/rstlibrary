@@ -52,4 +52,4 @@ if __name__ == '__main__':
     elif n > 1:
         bookid = sys.argv[1]
     if bookid:
-        print WorkingCopy(wcbase).svn_up(bookid)
+        print update(bookid)
