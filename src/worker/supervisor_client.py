@@ -1,4 +1,4 @@
-#!/usr/bin/env python -u
+#!/usr/bin/env python
 
 # An event listener that sends some data as RemoteCommand to supervisord 
 

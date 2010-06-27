@@ -115,7 +115,6 @@ def invalidate(bookid, url='http://www.srichinmoylibrary.com/invalidate'):
     log("jsonrpc - sending: %r", data)
     client = Client(url)
     return client.send(data)
-
     
 if __name__ == '__main__':
     url = ''

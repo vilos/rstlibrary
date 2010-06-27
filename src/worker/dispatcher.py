@@ -1,4 +1,4 @@
-#!/usr/bin/env python -u
+#!/usr/bin/env python
 
 # An event listener that listens for process communications events
 # from loop_eventgen.py and uses RPC to write data to the event
