@@ -10,15 +10,15 @@ conf = dict(SUPERVISOR_SERVER_URL='http://127.0.0.1:9001')
 
 def main(cmd, arg):
     rpcinterface = childutils.getRPCInterface(conf)
-    while 1:
-        headers, payload = childutils.listener.wait()
-        if headers['eventname'].startswith('TICK'):
+    #while 1:
+    #    headers, payload = childutils.listener.wait()
+    #    if headers['eventname'].startswith('TICK'):
 
-            print >>sys.stderr, childutils.get_asctime(), ':', cmd, arg
+    print >>sys.stderr, childutils.get_asctime(), ':', cmd, arg
                 
-            rpcinterface.supervisor.sendRemoteCommEvent(cmd, arg + '\n')
+    rpcinterface.supervisor.sendRemoteCommEvent(cmd, arg + '\n')
         
-        childutils.listener.ok()
+    #childutils.listener.ok()
 
 if __name__ == '__main__':
     n = len(sys.argv[1:])
