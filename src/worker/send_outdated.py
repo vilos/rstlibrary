@@ -24,8 +24,8 @@ if __name__=='__main__':
         ids = [getid(p) for p in outdated]
         
         for id in ids:
-            send('put', 'update:%s' % id)
-            send('put', 'invalidate:%s' % id)
+            send('put', cmd='update', arg=id)
+            send('put', cmd='invalidate', arg=id)
             
     else:
         print "Usage: %s repo_path " % sys.argv[0]
