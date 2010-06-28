@@ -1,6 +1,6 @@
 import os, sys
 import pysvn
-
+from log import log
 
 class SvnCommand(object):
     
@@ -26,17 +26,19 @@ class SvnCommand(object):
         self.extend_path(el)
         all_files = self.client.status(self.path, recurse=True, get_all=False, update=True)
         for file in all_files:
-            print( '%s%s  %s' % (file.text_status, file.prop_status, file.path))
+            log( 'Status: %s %s %s - %s' % (file.text_status, file.prop_status, file.repos_text_status, file.path))
+        return all_files
+    
     st = status
     def callback_notify(self, arg_dict):
         msg = '%s %s' % ( arg_dict['action'], arg_dict['path'])
         if arg_dict['action'] == pysvn.wc_notify_action.update_completed:
             msg += " revision: %s" % arg_dict['revision']
         msg += "\n"
-        sys.stderr.write(msg)
+        log(msg)
         
     def callback_getLogin(self, realm, username, may_save):
-        sys.stderr.write('Login required')
+        log('Login required')
         
         username = password = ''
         return 1, username, password, False
@@ -62,5 +64,5 @@ if __name__=='__main__':
         getattr(svn, cmd)()
         
     else:
-        print "Usage: %s cmd path " % sys.argv[0]
+        log("Usage: %s cmd path " % sys.argv[0])
     
