@@ -15,6 +15,12 @@ class SvnCommand(object):
         path = os.path.join(self.path, el)
         self.client.update(path)
         
+    def status(self, el):
+        path = os.path.join(self.path, el)
+        all_files = self.client.status(recurse=True, get_all=False, update=True)
+        for file in all_files:
+            print( '%s%s  %s' % (file.text_status, file.prop_status, file.path))
+    st = status
     def callback_notify(self, arg_dict):
         msg = '%s %s' % ( arg_dict['action'], arg_dict['path'])
         if arg_dict['action'] == pysvn.wc_notify_action.update_completed:
@@ -30,11 +36,28 @@ class SvnCommand(object):
     
     def callback_cancel(self):
         return False
+
+base='var/vslib'
+
+def update(bookid):
     
-def update(bookid, path='var/vslib'):
-    
-    svn = SvnCommand(path)
+    svn = SvnCommand(base)
     svn.up(bookid)
 
 if __name__=='__main__':
-    update(sys.argv[1])
+    arg = ''
+    argc = len(sys.argv)
+    if (argc > 2):
+        arg = sys.argv[2]
+    if (argc > 1):
+        cmd = sys.argv[1]
+        
+        svn = SvnCommand(base)
+        m = getattr(svn, cmd)
+        
+        m(arg)
+        
+        
+    else:
+        print "Usage: %s cmd [arg] " % sys.argv[0]
+    
