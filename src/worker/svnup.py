@@ -31,7 +31,7 @@ class SvnCommand(object):
     def callback_cancel(self):
         return False
     
-def update(bookid, path='./books'):
+def update(bookid, path='var/vslib'):
     
     svn = SvnCommand(path)
     svn.up(bookid)
