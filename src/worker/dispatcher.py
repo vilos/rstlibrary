@@ -41,8 +41,8 @@ class Dispatcher(object):
             try:
                 msg = broker.send()
                 cmd, arg = msg.split(':')
-            except:
-                #log(sys.exc_info()[0])
+            except Exception, err:
+                log(repr(err))
                 raise
             
             if cmd:
