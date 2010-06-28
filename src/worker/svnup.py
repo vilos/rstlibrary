@@ -15,9 +15,9 @@ class SvnCommand(object):
         path = os.path.join(self.path, el)
         self.client.update(path)
         
-    def status(self, el):
+    def status(self, el=''):
         path = os.path.join(self.path, el)
-        all_files = self.client.status(recurse=True, get_all=False, update=True)
+        all_files = self.client.status(path, recurse=True, get_all=False, update=True)
         for file in all_files:
             print( '%s%s  %s' % (file.text_status, file.prop_status, file.path))
     st = status
