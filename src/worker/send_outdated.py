@@ -19,7 +19,7 @@ if __name__=='__main__':
         
         svn = SvnCommand(path)
         files = svn.st()
-        outdated = [ f.path for f in files ]
+        outdated = [ f.path for f in files if str(f.repos_text_status) == 'modified']
         
         ids = [getid(p) for p in outdated]
         
