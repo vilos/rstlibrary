@@ -12,6 +12,7 @@ import jsonrpc
 from svnup import update
 from invalidate import invalidate
 from log import log
+import socket
 
 conf = dict(SUPERVISOR_SERVER_URL='http://127.0.0.1:9001')
 broker_url = 'http://127.0.0.1:7007/get'
@@ -37,10 +38,13 @@ class Dispatcher(object):
                 continue
                 
             broker = jsonrpc.Client(broker_url)
+            cmd = ''
             
             try:
                 msg = broker.send()
                 cmd, arg = msg.split(':')
+            except socket.error:
+                pass
             except Exception, err:
                 log(repr(err))
                 raise
