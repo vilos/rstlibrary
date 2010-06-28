@@ -1,12 +1,14 @@
 """
-worker implementation for supervisor_broker queue
+worker implementation for vsbroker queue
 
-supervisor_broker is a plugin for supervisord that implements simple queue
-input - xmlrpc or supervisorctl cli
+vsbroker is a server that implements simple command queue
 
 dispatcher is a process running under supervisord and
-listening to REMOTE_COMMUNICATION events
+listening to TICK events, querying the queue and dispatching commands
 
-xmlrpc-client  - testing only
+invalidate, svnup - command executers
+jsonrpc  - json client lib
+indexer / future indexer
 
+updater, process - deprecated
 """

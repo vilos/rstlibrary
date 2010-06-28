@@ -63,7 +63,7 @@ class Client(object):
     def __init__(self, url):
         self.url = url
         
-    def send(self, data):
+    def send(self, data={}):
         
         req = Request.blank(self.url)
         req.method = 'POST'
@@ -88,7 +88,7 @@ class Client(object):
 #                json['error'].get('error'),
                 resp)
             raise e
-        return json['result']
+        return json.get('result', None)
     
 class ProxyError(Exception):
     """
@@ -108,26 +108,3 @@ class Fault(Exception):
     def __str__(self):
         return 'Error calling %s: %s' % (self.response.request.url, self.args[0])
          
-         
-def invalidate(bookid, url='http://www.srichinmoylibrary.com/invalidate'):
-    data = dict(bookid=bookid)
-    
-    log("jsonrpc - sending: %r", data)
-    client = Client(url)
-    return client.send(data)
-    
-if __name__ == '__main__':
-    url = ''
-    if len(sys.argv) > 2:
-        url, bookid = sys.argv[1:]
-        
-    elif len(sys.argv) > 1:
-        bookid = sys.argv[1]
-        
-    if bookid:
-        if url:
-            print invalidate(bookid, url)
-        else:
-            print invalidate(bookid)
-    else:
-        print 'bookid ?'
