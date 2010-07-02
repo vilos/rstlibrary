@@ -61,11 +61,15 @@ class Dispatcher(object):
             childutils.listener.ok(self.stdout)
             
     def do_update(self, arg):
-        return update(arg)
+        msg = update(arg)
+        msg += invalidate(arg)
+        return msg
         
     def do_invalidate(self, arg):
-        return invalidate(arg)
-            
+        msg = update(arg)
+        msg += invalidate(arg)
+        return msg
+                
         
 def main():
     

@@ -30,6 +30,7 @@ class SvnCommand(object):
         return all_files
     
     st = status
+    
     def callback_notify(self, arg_dict):
         msg = '%s %s' % ( arg_dict['action'], arg_dict['path'])
         if arg_dict['action'] == pysvn.wc_notify_action.update_completed:
@@ -51,6 +52,7 @@ def update(bookid, base='var/vslib'):
     
     svn = SvnCommand(base)
     svn.up(bookid)
+    return ""
 
 if __name__=='__main__':
     arg = ''
