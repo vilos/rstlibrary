@@ -1,16 +1,17 @@
+#!/usr/bin/env python
 ''' find all books with poems
 '''
-
+import os,sys, re
 from books import  register_source, register_store
 from books.interfaces import ISource, IStore
 from paste.deploy.loadwsgi import appconfig
 from zope.component import getUtility
-import os
 
+regenre = re.compile(r":genre:\ +poem") 
+redirective = re.compile(r"..\ poem::")
 
-
-def init():
-    config_path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','develop.ini'))
+def init(path):
+    config_path = os.path.realpath(path)
     base, name = os.path.split(config_path)
     config = appconfig('config:%s' % name, name='vslibrary', relative_to=base)
     
@@ -27,8 +28,8 @@ def is_poems_missing_directive(bookid):
     src =  getUtility(ISource)
     text = src[bookid]
     
-    if 'poem' in text:
-        if not '.. poem::' in text:
+    if regenre.search(text):
+        if not redirective.search(text):
             return True
     return False
 
@@ -38,10 +39,6 @@ def run():
     keys = sorted(src.keys())
     
     for i, bookid in enumerate(keys):
-        #if i<1000:
-        #    continue
-        #if i>1010:
-        #    break
         
         #print '%d.' % i,
         if is_poems_missing_directive(bookid):
@@ -56,9 +53,12 @@ def close():
     
     
 if __name__=='__main__':
-    init()
-    run()
-    close()
+    if len(sys.argv) > 1:
+        init(sys.argv[1])
+        run()
+        close()
+    else:
+        print "Usage: %s path_to_paste_ini_file" % sys.argv[0]
     
     
 
