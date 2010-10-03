@@ -4,7 +4,7 @@ from repoze.bfg.interfaces import ILocation
 from repoze.bfg.traversal import find_interface, model_path
 from docutils import nodes
 from interfaces import IBook, ISection, ISource, IStore
-from restructured import publish2doc, publish, extract
+from restructured import publish2doc, publish, extract, is_hidden_section
 
 class Section(object):
     
@@ -56,13 +56,10 @@ class Section(object):
             return self.node[0].astext()     
         raise RuntimeError, "Wrong node for title: %r" % self.node
 
-    @property
-    def classes(self):
-        return " ".join(self.node.get('classes', []))
         
     @property
     def hidden(self):
-        return 'hidden' in self.node.get('classes', [])
+        return is_hidden_section(self.node)
     
     @property
     def isleaf(self):
@@ -112,7 +109,7 @@ class Section(object):
     def astext(self):
         if self.hidden:
             return u""
-        doctree = self.root.doctree
+        doctree = self.book.doctree
         if not isinstance(self, Book):
             doctree = doctree.copy()
             doctree.append(self.node)
@@ -134,6 +131,8 @@ class Section(object):
     def __repr__(self):
         return "<Section %s>" % model_path(self)
         
+ARTICLES = ('A ', 'AN ', 'THE ')
+
 class Book(Section):
     
     implements(IBook)
@@ -201,6 +200,27 @@ class Book(Section):
                     value = field.astext()
                 result[key] = value
         return result
+    
+    # indexed properties
+    @property
+    def alpha(self):
+        """ the first letter of book title """
+        title = self.title.upper()
+        for an in ARTICLES:
+            if title.startswith(an) and len(title) > len(an):
+                return title[len(an):].lstrip()[0]
+        return  title[0]
+    
+    @property
+    def author(self):
+        """ an attribute of docinfo """
+        return self.docinfo.get('author', None)        
+    
+    @property
+    def language(self):
+        """ an attribute of docinfo """
+        return self.docinfo.get('language', None)        
+
     
 def get_book(name, parent=None):
     if name in getUtility(ISource):

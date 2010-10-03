@@ -51,6 +51,8 @@ third alpha.1
 Section 3.b
 ~~~~~~~~~~~
 
+:hidden: 1
+
 third beta
 
 """
@@ -90,7 +92,7 @@ class TestBook(unittest.TestCase):
         del self.book.source
         self.assertRaises(KeyError, self.book._src_get)
         
-    def test_docinfo(self):
+    def test_doctree(self):
         self.book.source = src
         doc1 = self.book.doctree
         doc2 = self.book.doctree
@@ -110,6 +112,16 @@ class TestBook(unittest.TestCase):
         self.failUnlessRaises(IndexError, book.__getitem__, '0')
         self.failUnlessRaises(KeyError, book.__getitem__, '7')
         self.failUnlessRaises(KeyError, book.__getitem__, 'x')
+        
+    def test_astext(self):
+        s2a = self.book['2']['1']
+        self.failUnlessEqual(s2a.astext(), "Section 2.a second alpha")
+
+    def test_hidden(self):
+        s3b = self.book['3']['2']
+        
+        self.failUnless(s3b.hidden)
+        self.failUnlessEqual(s3b.astext(), "")
         
     def test_walk(self):
 
@@ -159,7 +171,6 @@ class TestBook(unittest.TestCase):
         while prev:
             print >>out, model_path(prev)
             prev = prev.previous_leaf()
-        print out.getvalue()
         target = """0000/3/2
 0000/3/1/1
 0000/2/2
@@ -167,3 +178,43 @@ class TestBook(unittest.TestCase):
 0000/1
 """ 
         self.failUnlessEqual(out.getvalue(), target)
+        
+    def test_html(self):
+        target = u"""<div class="genre_talk section" id="section-1">
+<h1>Section 1</h1>
+<p>first
+ěščřžýáíúů</p>
+</div>
+<div class="section" id="section-2">
+<h1>Section 2</h1>
+<div class="section" id="section-2-a">
+<h2>Section 2.a</h2>
+<p>second alpha</p>
+</div>
+<div class="section" id="section-2-b">
+<h2>Section 2.b</h2>
+<p>second beta</p>
+</div>
+</div>
+<div class="section" id="section-3">
+<h1>Section 3</h1>
+<div class="section" id="section-3-a">
+<h2>Section 3.a</h2>
+<p>third alpha</p>
+<div class="section" id="section-3-a-1">
+<h3>Section 3.a.1</h3>
+<p>third alpha.1</p>
+</div>
+</div>
+<div class="hidden section" id="section-3-b">
+<h2>Section 3.b</h2>
+</div>
+</div>
+"""
+        output = self.book.ashtml()
+        #self.failUnlessEqual(len(target), len(output))                
+        self.failUnlessEqual( output, target, output)
+        
+        output = self.book.ashtml()
+        self.failUnlessEqual( output, target, output)
+        
