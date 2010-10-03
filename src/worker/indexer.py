@@ -1,15 +1,18 @@
-import os, re, logging
-
+import sys,  re  #, logging
 import xappy
 
-log = logging.getLogger(__name__)
+from sensible.loginit import logger
+
+log = logger(__name__)
+
+#log = logging.getLogger(__name__)
 
 num_sort_regex = re.compile('\d+')
 
-parent = os.path.dirname
-base = parent(parent(parent(parent(__file__))))
-print base
-database = os.path.join(base, 'var', 'index')
+import books
+config = books.configure()
+index_path = config.get('database')
+
 
 def zero_fill(matchobj):
     return matchobj.group().zfill(8)
@@ -25,9 +28,9 @@ def sortable(title):
     return ''
 
 
-def create_indexer(database=database, indexer=None):
+def indexer_connection(index_path=index_path, indexer=None):
     if not indexer:
-        indexer = xappy.IndexerConnection(database)
+        indexer = xappy.IndexerConnection(index_path)
 
     # indexes
     indexer.add_field_action('searchable_text', xappy.FieldActions.INDEX_FREETEXT, nopos=True)
@@ -35,6 +38,7 @@ def create_indexer(database=database, indexer=None):
     #indexer.add_field_action('keywords', xappy.FieldActions.FACET)
     indexer.add_field_action('type', xappy.FieldActions.INDEX_EXACT)
     indexer.add_field_action('alpha', xappy.FieldActions.INDEX_EXACT)
+    indexer.add_field_action('language', xappy.FieldActions.INDEX_EXACT)
     indexer.add_field_action('sortable_title', xappy.FieldActions.SORTABLE)
     indexer.add_field_action('hidden', xappy.FieldActions.INDEX_EXACT)
     #indexer.add_field_action('modified', xappy.FieldActions.SORTABLE, type='data')
@@ -42,6 +46,7 @@ def create_indexer(database=database, indexer=None):
     # metadata
     indexer.add_field_action('title', xappy.FieldActions.STORE_CONTENT)
     indexer.add_field_action('alpha', xappy.FieldActions.STORE_CONTENT)
+    indexer.add_field_action('language', xappy.FieldActions.STORE_CONTENT)
     indexer.add_field_action('type', xappy.FieldActions.STORE_CONTENT)
     indexer.add_field_action('searchable_text', xappy.FieldActions.STORE_CONTENT)
     #indexer.add_field_action('description', xappy.FieldActions.STORE_CONTENT)
@@ -63,6 +68,7 @@ class BookIndexer(object):
         title = self.resource.title
         alpha = self.resource.alpha
         author = self.resource.author
+        language = self.resource.language
         #keywords = self.resource.keywords
         #modified = self.resource.modified
         searchable_text = title
@@ -76,6 +82,9 @@ class BookIndexer(object):
         if alpha:
             doc.fields.append(xappy.Field('alpha', alpha))
 
+        if language:
+            doc.fields.append(xappy.Field('language', language))
+            
         #if keywords:
         #    for keyword in keywords:
         #        doc.fields.append(xappy.Field('keywords', keyword))
@@ -129,9 +138,27 @@ class SectionIndexer(object):
         return doc
     
 def index(bookid):
-    conn = create_indexer()
-    book = resolve(bookid)
+    connection = indexer_connection(index_path)
+    book = books.get_book(bookid)
     
-    conn.add(doc)
-    conn.flush()
-    conn.close()
+    for obj in book.walk():
+        indexer = globals().get("%sIndexer" % obj.__class__.__name__, None)
+        if indexer is None:
+            raise KeyError("Indexer for object %s not found." % obj.__class__.__name__)
+
+        doc = indexer(obj).document(connection)
+        doc.id = obj.__name__
+    
+        connection.replace(doc)
+    
+    connection.flush()
+    connection.close()
+
+if __name__ == '__main__':
+    n = len(sys.argv)
+    bookid = ''
+    if n > 1:
+        bookid = sys.argv[1]
+    if bookid:
+        print index(bookid)
+    
