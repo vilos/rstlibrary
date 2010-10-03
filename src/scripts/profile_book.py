@@ -1,10 +1,8 @@
 '''
 '''
 
-import os, time
-from paste.deploy.loadwsgi import appconfig
 from zope.component import getUtility
-from books import Book, register_source, register_store
+from books import Book, initialize
 from books.interfaces import ISource, IStore
 from restructured import publish2doc
 from timing import print_timing
@@ -13,18 +11,6 @@ from timing import print_timing
 #import pstats
 from pympler.muppy import muppy, tracker, summary, refbrowser
 
-def init():
-    config_path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','develop.ini'))
-    base, name = os.path.split(config_path)
-    config = appconfig('config:%s' % name, name='vslibrary', relative_to=base)
-    
-    src_path = config.get('src_path')
-    store_url = config.get('store_url')
-    cache_url = config.get('cache_url')
-    max_entries = 10
-    
-    register_source(src_path)
-    register_store(store_url, cache_url, max_entries=max_entries)
 
 @print_timing
 def publish(bookid):
@@ -87,7 +73,7 @@ def collect():
     
     
 if __name__=='__main__':
-    init()
+    initialize()
     tr = tracker.SummaryTracker()
     run(title)
     close()
