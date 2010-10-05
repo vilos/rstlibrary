@@ -77,7 +77,8 @@ class Client(object):
                              % (self.url, resp.status), resp)
         try:
             json = loads(resp.body)
-        except ValueError:
+        #except ValueError:
+        except:
             print >>sys.stderr, resp.body
             raise
             
