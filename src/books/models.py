@@ -56,7 +56,6 @@ class Section(object):
             return self.node[0].astext()     
         raise RuntimeError, "Wrong node for title: %r" % self.node
 
-        
     @property
     def hidden(self):
         return is_hidden_section(self.node)
@@ -66,7 +65,11 @@ class Section(object):
         for child in self:
             return False
         return True
-    
+
+    @property
+    def classes(self):
+        return " ".join(self.node.get('classes', []))
+        
     def walk(self):
         yield self
         for section in self:
