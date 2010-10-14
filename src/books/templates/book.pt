@@ -7,9 +7,9 @@
   <h1 class="toc">${book.title}</h1>
   <div id="colophon" tal:condition="book">
   <tal:block define="title book.title;
-                     author book.docinfo.author;
-                     publisher book.docinfo.publisher;
-                     year book.docinfo.year">
+                     author book.author;
+                     publisher book.info.publisher;
+                     year book.info.year">
     <p class="byline" tal:condition="author">by ${author}</p>
     <p>Welcome to the home of ${title} <tal:block tal:condition="author">  by ${author}</tal:block>.<br/>
     <tal:block condition="publisher or year">First published
