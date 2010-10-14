@@ -1,6 +1,9 @@
 import os, sys
 import pysvn
-from log import log
+
+from sensible.loginit import logger
+
+log = logger(__name__)
 
 class SvnCommand(object):
     
@@ -36,9 +39,9 @@ class SvnCommand(object):
         self.client.update(self.path)
 
         if self.revision_update_complete is not None:
-            log('Checked out revision %s' % self.revision_update_complete.number)
+            log.info('Checked out revision %s' % self.revision_update_complete.number)
         else:
-            log('Checked out unknown revision - checkout failed?')
+            log.warning('Checked out unknown revision - checkout failed?')
         
     def checkout(self, path=''):
         self.extend_path(path)
@@ -48,15 +51,15 @@ class SvnCommand(object):
         self.client.checkout(url, path, recurse=True)
         
         if self.revision_update_complete is not None:
-            log('Checked out revision %s' % self.revision_update_complete.number)
+            log.info('Checked out revision %s' % self.revision_update_complete.number)
         else:
-            log('Checked out unknown revision - checkout failed?')
+            log.warning('Checked out unknown revision - checkout failed?')
             
     def status(self, el=''):
         self.extend_path(el)
         all_files = self.client.status(self.path, recurse=True, get_all=False, update=True)
         for file in all_files:
-            log('Status: %s %s %s - %s' % (file.text_status, file.prop_status, file.repos_text_status, file.path))
+            log.info('Status: %s %s %s - %s' % (file.text_status, file.prop_status, file.repos_text_status, file.path))
         return all_files
     
     st = status
@@ -72,10 +75,10 @@ class SvnCommand(object):
             self.revision_update_complete = arg_dict['revision']
         elif arg_dict['path'] != '' and arg_dict['action']  is not None:
             msg = '%s %s\n' % ( arg_dict['action'], arg_dict['path'])
-            log( msg )
+            log.info(msg)
                 
     def callback_getLogin(self, realm, username, may_save):
-        log('Login required')
+        log.error('Login required')
         
         username = password = ''
         return 1, username, password, False
@@ -106,5 +109,5 @@ if __name__=='__main__':
         getattr(svn, cmd)()
         
     else:
-        log("Usage: %s cmd path " % sys.argv[0])
+        log.info("Usage: %s cmd path " % sys.argv[0])
     

@@ -7,7 +7,10 @@
         (create new pickle)
 """
 import sys, os, subprocess
-from log import log
+
+from sensible.loginit import logger
+
+log = logger(__name__)
 
 parent = os.path.dirname
 base = parent(parent(parent(parent(parent(__file__)))))
@@ -38,7 +41,7 @@ class WorkingCopy(object):
         
 def update(bookid):
     wc = WorkingCopy() 
-    log("svn up: %s", wc.wc_path(bookid))
+    log.debug("svn up: %s", wc.wc_path(bookid))
     return wc.svn_up(bookid)
     #Cache(cachebase).invalidate(bookid)
 

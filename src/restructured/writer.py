@@ -1,17 +1,34 @@
 from  docutils import nodes, writers
 from  docutils.writers import html4css1, null
 from transform import SectionTransform
-
+from utils import is_hidden_section
+        
+        
 class Translator(html4css1.HTMLTranslator):
-
+    
+    def __init__(self, document):
+        self.hide = False
+        html4css1.HTMLTranslator.__init__(self, document)
+        
     def visit_docinfo(self, node):
         raise nodes.SkipNode
 
     def visit_field_list(self, node):
         raise nodes.SkipNode
 
+    def visit_paragraph(self, node):
+        if self.hide:
+            raise nodes.SkipNode
+        else:
+            html4css1.HTMLTranslator.visit_paragraph(self, node)
+            
     def visit_section(self, node):
-        #section_handler(self, node)
+        self.hide = is_hidden_section(node)
+        if 'section' in node['classes']:
+            classes = set(node['classes'])
+            # avoid duplication of class added by html writer
+            classes.remove('section')
+            node['classes'] = list(classes)
         html4css1.HTMLTranslator.visit_section(self, node)
         
 
@@ -63,7 +80,10 @@ class TextTranslator(nodes.SparseNodeVisitor):
         self.body.append(node.astext())
 
     def visit_section(self, node):
-        #section_handler(self, node)
+        
+        if is_hidden_section(node):
+            raise nodes.SkipNode
+        
         # to avoid duplicated text
         if isinstance(node.parent, nodes.section):
             raise nodes.SkipNode

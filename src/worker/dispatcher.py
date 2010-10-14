@@ -4,18 +4,19 @@
 # from loop_eventgen.py and uses RPC to write data to the event
 # generator's stdin.
 
-import sys
+import sys,os
 from supervisor import childutils
 
 import jsonrpc
-
+from sensible.loginit import logger
 from svnup import update
 from invalidate import invalidate
-from log import log
+from indexer import index
 import socket
 
 conf = dict(SUPERVISOR_SERVER_URL='http://127.0.0.1:9001')
 broker_url = 'http://127.0.0.1:7007/get'
+log = logger(os.path.basename(__file__))
 
 class Dispatcher(object):
     
@@ -45,31 +46,41 @@ class Dispatcher(object):
                 cmd, arg = msg.split(':')
             except socket.error:
                 pass
-            except Exception, err:
-                log(repr(err))
+            except Exception, e:
+                log.exception(str(e))
                 raise
             
             if cmd:
                 cmd_name = 'do_%s' % cmd
                 m = getattr(self, cmd_name, None)
                 if m:
-                    msg = m(arg)
-                    log(msg)
+                    try:
+                        msg = m(arg)
+                    except Exception, e:
+                        log.exception(str(e))
+                    else:
+                        log.info(msg)
                 else:
-                    log('unknown command: %s:%s' % (cmd, arg))
+                    log.error('unknown command: %s:%s' % (cmd, arg))
                     
             childutils.listener.ok(self.stdout)
             
     def do_update(self, arg):
         msg = update(arg)
+        msg += "\n"
         msg += invalidate(arg)
+        msg += "\n"
+        msg += index(arg)
         return msg
         
-    def do_invalidate(self, arg):
-        msg = update(arg)
-        msg += invalidate(arg)
-        return msg
-                
+#    def do_invalidate(self, arg):
+#        msg = update(arg)
+#        msg += invalidate(arg)
+#        return msg
+#    
+    def do_index(self, arg):
+        return index(arg)
+        
         
 def main():
     

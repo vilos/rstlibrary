@@ -1,7 +1,9 @@
 from docutils import nodes, transforms
 
-HIDDEN_FIELD_NAMES = ['private', 'hidden']
-GENRE_FIELD_NAME = 'genre'
+HIDDEN_FIELD_NAMES = [u'private', u'hidden']
+GENRE_FIELD_NAME = u'genre'
+TRUE_VALUES = u'1 y yes'.split()
+
 
 class SectionTransform(transforms.Transform):
 
@@ -12,24 +14,19 @@ class SectionTransform(transforms.Transform):
     default_priority = 777
 
     def apply(self):
-        classes = set()
         for node in self.document.traverse(nodes.section):
-            fl = node.next_node(nodes.field_list)
-            if fl is None: 
-                return
-            for f in fl.traverse(nodes.field):
-                name = f.next_node(nodes.field_name).astext()
-                value = f.next_node(nodes.field_body)
-                if value:
-                    value = value.astext()
-                    
-                if name in HIDDEN_FIELD_NAMES:
-                    #node.parent.remove(node)
+            classes = set()
+            fidx = node.first_child_matching_class(nodes.field_list)
+            if not fidx:
+                continue
+            for field in node[fidx].children:
+                name, value = field[0].astext(), field[1].astext()
+                if name in HIDDEN_FIELD_NAMES and value in TRUE_VALUES:
                     classes.add('hidden')
-                    
                 elif name == GENRE_FIELD_NAME:
                     classes.add('_'.join([name, value]))
                     
             if classes:
+                classes = list(classes)
+                #node['classes'].extend(classes)  #= node.get('classes', []).extend(classes) #
                 node['classes'] = list(set(node['classes']).union(classes))
-                classes = set()
