@@ -1,18 +1,8 @@
 from  docutils import nodes, writers
 from  docutils.writers import html4css1, null
-from transform import SectionTransform, HIDDEN_FIELD_NAMES, TRUE_VALUES
-
+from transform import SectionTransform
+from utils import is_hidden_section
         
-def is_hidden_section(node):
-    if not isinstance(node, nodes.section):
-        return None
-    fidx = node.first_child_matching_class(nodes.field_list)
-    if not fidx:
-        return False
-    for field in node[fidx].children:
-        if field[0].astext() in HIDDEN_FIELD_NAMES and field[1].astext() in TRUE_VALUES:
-            return True
-    return False
         
 class Translator(html4css1.HTMLTranslator):
     
@@ -36,6 +26,7 @@ class Translator(html4css1.HTMLTranslator):
         self.hide = is_hidden_section(node)
         if 'section' in node['classes']:
             classes = set(node['classes'])
+            # avoid duplication of class added by html writer
             classes.remove('section')
             node['classes'] = list(classes)
         html4css1.HTMLTranslator.visit_section(self, node)

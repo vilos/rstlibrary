@@ -13,7 +13,23 @@
     view=".views.PageView"
     renderer="templates/page.pt"
    />
+
+  <view
+    route_name="books"
+    name="xml"
+    context=".interfaces.IBook"
+    view=".views.XMLView"
+    renderer="templates/xml.pt"
+   />
    
+  <view
+    route_name="books"
+    name="xml"
+    context=".interfaces.ISection"
+    view=".views.XMLView"
+    renderer="templates/xml.pt"
+   />
+      
   <route
     path="/invalidate"
     name="invalidate"

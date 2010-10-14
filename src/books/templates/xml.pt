@@ -3,16 +3,10 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <metal:block use-macro="base.macros.master">
-  <metal:block fill-slot="title"></metal:block>
-  <metal:block fill-slot="alphas">
-    <metal:block use-macro="base.macros.alphas"/>
-  </metal:block>
   <metal:block fill-slot="content">
-    <div id="booklist">
-      <ul>
-        <li tal:repeat="book books"><a href="${base_url()}/${book.url}">${book.title}</a></li>
-      </ul>
-    </div>
-  </metal:block>
+  <div class="xml">
+    <div tal:replace="structure xml">xml</div>
+  </div>
+  </metal:block>  
 </metal:block>
 </html>

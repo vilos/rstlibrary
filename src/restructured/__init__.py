@@ -5,8 +5,8 @@ import os
 from docutils import io, nodes
 from docutils.core import publish_programmatically, publish_from_doctree, publish_parts
 from docutils.utils import Reporter
-from writer import HTMLWriter, TextWriter, TransformingWriter, is_hidden_section
-
+from writer import HTMLWriter, TextWriter, TransformingWriter
+from utils import first_child, get_info, is_hidden_section
     
 class WarningStream(object):
     
@@ -65,7 +65,7 @@ def extract(doctree):
 def publish_source(source):
     return publish_parts(source, 
                          writer_name="html")['html_body']
-#package
+
 
 # monkey patch docutils for correct poemline
 

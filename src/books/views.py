@@ -34,7 +34,7 @@ class PageView(BaseView):
             
         nextlink = next and dict(url=self.base_url(next), title=next.title) or {}
         prevlink = previous and dict(url=self.base_url(previous), title=previous.title) or {}
-        uplink = dict(url=self.base_url(book), title=book.title, author = book.docinfo['author'])
+        uplink = dict(url=self.base_url(book), title=book.title, author = book.author)
         
         data =  dict(
             section=section,
@@ -45,6 +45,11 @@ class PageView(BaseView):
             )
         return super(PageView, self).__call__(**data)
 
+
+class XMLView(BaseView):
+    def __call__(self):
+        return super(XMLView, self).__call__(xml=self.context.asxml())
+    
 
 def update_view(request):
     json = loads(request.body)

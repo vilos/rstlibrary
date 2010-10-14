@@ -4,7 +4,7 @@ from repoze.bfg.interfaces import ILocation
 from repoze.bfg.traversal import find_interface, model_path
 from docutils import nodes
 from interfaces import IBook, ISection, ISource, IStore
-from restructured import publish2doc, publish, extract, is_hidden_section
+from restructured import publish2doc, publish, extract, get_info, is_hidden_section
 
 class Section(object):
     
@@ -13,15 +13,7 @@ class Section(object):
     def __init__(self, node, parent, name):
         self._node = node
         self.__parent__ = self.parent = parent
-        self.__name__ = name
-    
-    @property
-    def node(self):
-        return self._node
-    
-    @property
-    def book(self):
-        return find_interface(self, Book)        
+        self.__name__ = name    
     
     def __getitem__(self, name):
         """ repoze.bfg traversal support """
@@ -47,6 +39,21 @@ class Section(object):
                 yield Section(child, self, str(i))
                 i += 1
     
+    def __repr__(self):
+        return "<Section %s>" % self.url
+    
+    @property
+    def url(self):
+        return model_path(self)
+
+    @property
+    def node(self):
+        return self._node
+    
+    @property
+    def book(self):
+        return find_interface(self, Book)    
+    
     def subsections(self):
         return list(self.__iter__())
     
@@ -57,8 +64,16 @@ class Section(object):
         raise RuntimeError, "Wrong node for title: %r" % self.node
 
     @property
+    def info(self):
+        return get_info(self.node)
+    
+    @property
     def hidden(self):
         return is_hidden_section(self.node)
+    
+    @property
+    def genre(self):
+        return self.info.get('genre', None)
     
     @property
     def isleaf(self):
@@ -75,7 +90,8 @@ class Section(object):
         for section in self:
             for subsection in section.walk():
                 yield subsection
-                
+    
+    # page navigation
     def first_child_leaf(self):
         for section in self.walk():
             if section.isleaf:
@@ -108,7 +124,8 @@ class Section(object):
             return prev
         else:
             return self.parent.previous_leaf()
-            
+    
+    #serializations 
     def astext(self):
         if self.hidden:
             return u""
@@ -127,12 +144,15 @@ class Section(object):
             doctree.append(self.node)
         return publish(doctree)
     
-    @property
-    def url(self):
-        return model_path(self)
-    
-    def __repr__(self):
-        return "<Section %s>" % model_path(self)
+    def asxml(self):
+        """ restructured pseudo xml """
+        xml = self.node.pformat()
+        from chameleon.core.utils import htmlescape
+        xml = htmlescape(xml)
+        xml = xml.replace('\n','<br/>\n')
+        xml = xml.replace(' ', '&nbsp;')
+        return xml
+
         
 ARTICLES = ('A ', 'AN ', 'THE ')
 
@@ -148,11 +168,6 @@ class Book(Section):
         self._src = getUtility(ISource)
         self._store = getUtility(IStore)
         
-        self._n = None  #TODO remove
-        
-        #if not self.id in self._src:
-        #    raise KeyError('%s' % self.id)
-        
     def _src_get(self):
         return self._src[self.id]
     
@@ -166,12 +181,6 @@ class Book(Section):
     
     @property
     def doctree(self):
-        
-        #if not self._n:
-        #    self._n = publish2doc(self.source)
-        #return self._n
-        
-        
         try:
             node = self._store[self.id]
         except KeyError:
@@ -188,26 +197,11 @@ class Book(Section):
     @property
     def title(self):
         return self.node[0].astext()
-    
-    @property
-    def docinfo(self):
-        result = {}
-        docinfo = first_child(self.doctree, nodes.docinfo)
-        if docinfo:
-            for field in docinfo:
-                if isinstance(field, nodes.field):
-                    key = first_child(field, nodes.field_name).astext()
-                    value = first_child(field, nodes.field_body).astext()
-                else:
-                    key = field.tagname
-                    value = field.astext()
-                result[key] = value
-        return result
-    
+        
     # indexed properties
     @property
     def alpha(self):
-        """ the first letter of book title """
+        """ the first letter of a book title """
         title = self.title.upper()
         for an in ARTICLES:
             if title.startswith(an) and len(title) > len(an):
@@ -216,20 +210,19 @@ class Book(Section):
     
     @property
     def author(self):
-        """ an attribute of docinfo """
-        return self.docinfo.get('author', None)        
+        return self.info.get('author', None)        
     
     @property
     def language(self):
-        """ an attribute of docinfo """
-        return self.docinfo.get('language', None)        
+        return self.info.get('language', None)        
 
+    @property
+    def genre(self):
+        return self.info.get('genre', None)        
+    
     
 def get_book(name, parent=None):
     if name in getUtility(ISource):
         return Book(name, parent)
     else:
         raise KeyError('Book not found: %s' % name)
-    
-def first_child(node, child_class):
-    return node[node.first_child_matching_class(child_class)]

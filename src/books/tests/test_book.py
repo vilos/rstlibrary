@@ -97,6 +97,14 @@ class TestBook(unittest.TestCase):
         doc1 = self.book.doctree
         doc2 = self.book.doctree
         self.failUnless(doc1.pformat() == doc2.pformat())
+        
+    def test_docinfo(self):
+        info = self.book.info
+        self.failUnlessEqual(info['bookID'], '0000')
+        self.failUnlessEqual(info['author'], 'Somebody')
+        
+        info = self.book['1'].info
+        self.failUnlessEqual(info['genre'], 'talk')
 
     def test_section(self):
         book = self.book
