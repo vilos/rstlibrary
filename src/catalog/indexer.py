@@ -1,6 +1,8 @@
 import os, sys,  re  #, logging
 import time
 import xappy
+import books
+from conf import configure
 
 #os.environ["LOGGING_DEBUG"] =  "1"
 from sensible.loginit import logger
@@ -10,10 +12,6 @@ log = logger(__name__)
 #log = logging.getLogger(__name__)
 
 num_sort_regex = re.compile('\d+')
-
-import books
-config = books.configure()
-index_path = config.get('database')
 
 
 def zero_fill(matchobj):
@@ -29,10 +27,10 @@ def sortable(title):
         return sortabletitle
     return ''
 
-
-def indexer_connection(index_path=index_path, indexer=None):
-    if not indexer:
-        indexer = xappy.IndexerConnection(index_path)
+def indexer_connection(index_path=None):
+    if not index_path:
+        index_path = configure()
+    indexer = xappy.IndexerConnection(index_path)
 
     # indexes
     indexer.add_field_action('searchable_text', xappy.FieldActions.INDEX_FREETEXT, nopos=True)
@@ -94,7 +92,6 @@ class BookIndexer(Indexer):
         self.append('sortable_title', sortable(self.resource.title))
         self.append('searchable_text', self.resource.title)
 
-
 class SectionIndexer(Indexer):
 
     type = 'Section'
@@ -113,7 +110,7 @@ class SectionIndexer(Indexer):
             self.append('language', self.resource.book.language)
             self.append('genre', self.resource.genre)
             
-def index(bookid):
+def index(bookid, index_path=None):
     t1 = time.time()
     connection = indexer_connection(index_path)
     try:

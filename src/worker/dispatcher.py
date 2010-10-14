@@ -11,7 +11,7 @@ import jsonrpc
 from sensible.loginit import logger
 from svnup import update
 from invalidate import invalidate
-from indexer import index
+from catalog import index
 import socket
 
 conf = dict(SUPERVISOR_SERVER_URL='http://127.0.0.1:9001')

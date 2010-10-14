@@ -1,12 +1,14 @@
 """ send books changed in svn repo but not updated in live wc """
 import sys, os
 import signal
-#from svnup import SvnCommand
-#from jsontest import send
+
 from indexer import index
+from conf import configure
+from info import indexed
 
 keep_processing = True
 
+os.environ["LOGGING_DEBUG"] =  "1"
 from sensible.loginit import logger
 log = logger(os.path.basename(__file__))
 
@@ -32,22 +34,22 @@ if __name__=='__main__':
     argc = len(sys.argv)
     if (argc > 1):
         
+        index_path = configure()
+        
         path = sys.argv[1]
         
         ids = [n for n in os.listdir(path) if not n.startswith('.')]
-        ids.sort()
         
-#        svn = SvnCommand(path)
-#        files = svn.st()
-#        files = [f.path for f in svn.st()] # if str(f.repos_text_status) == 'modified']
-#        
-#        ids = [getid(p) for p in files]
-#        ids.sort()
+        indexed = list(indexed(index_path))
+        
+        ids = list(set(ids) - set(indexed))
+        ids.sort()
         
         for id in ids:
             #print 'Sending: put', id
             #send('put', cmd='index', arg=id)
-            index(id)
+            msg = index(id, index_path)
+            log.info(msg)
             if not keep_processing:
                 break
     else:

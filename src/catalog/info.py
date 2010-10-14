@@ -1,6 +1,7 @@
 import os, sys
 import xappy
 import books
+from conf import configure
 
 os.environ["LOGGING_DEBUG"] =  "1"
 from sensible.loginit import logger
@@ -8,14 +9,12 @@ from sensible.loginit import logger
 log = logger(__name__)
 
 
-config = books.configure()
-index_path = config.get('database')
-
-print 'Index at:', index_path
-
 class X(object):
-    def __init__(self, index_path=index_path):
+    def __init__(self, index_path=None):
+        if not index_path:
+            index_path=configure()
         self.connection = xappy.SearchConnection(index_path)
+        print "index at", index_path
         
     def indexed(self):
         conn = self.connection
@@ -42,7 +41,19 @@ class X(object):
         conn = self.connection
         doc = conn.get_document(id)
         print doc.data
-        
+     
+
+def info(index_path=None):
+    x = X(index_path)
+    x.info()
+
+def indexed(index_path=None):
+    x = X(index_path)
+    indexed = x.indexed() 
+    for p in indexed:
+        print p
+    return indexed
+       
 if __name__ == '__main__':
     
     x = X()
