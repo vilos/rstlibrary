@@ -27,8 +27,8 @@ class Dispatcher(object):
         self.stderr = sys.stderr
         
     def run(self):
-        
-        if 1:
+        cmd = None
+        while not cmd:
             # we explicitly use self.stdin, self.stdout, and self.stderr
             # instead of sys.* so we can unit test this code
             headers, payload = childutils.listener.wait(self.stdin, self.stdout)
