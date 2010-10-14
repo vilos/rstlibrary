@@ -49,9 +49,10 @@ def info(index_path=None):
 
 def indexed(index_path=None):
     x = X(index_path)
-    indexed = x.indexed() 
+    indexed = x.indexed()
+    print 'Already indexed:'
     for p in indexed:
-        print p
+        print p.id
     return indexed
        
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
+import os
 import books
 
 
 def configure():
     config = books.configure()
-    return config.get('database')
+    return os.path.abspath(config.get('database'))

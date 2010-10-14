@@ -40,7 +40,7 @@ if __name__=='__main__':
         
         ids = [n for n in os.listdir(path) if not n.startswith('.')]
         
-        indexed = list(indexed(index_path))
+        indexed = [a.id for a in indexed(index_path)]
         
         ids = list(set(ids) - set(indexed))
         ids.sort()
