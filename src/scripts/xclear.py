@@ -8,7 +8,7 @@ import books
 
 config = books.configure()
 index_path = config.get('database')
-
+print 'Index at:', index_path
 
 class X(object):
     def __init__(self, index_path=index_path):
