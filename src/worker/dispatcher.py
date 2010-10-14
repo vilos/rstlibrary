@@ -28,7 +28,7 @@ class Dispatcher(object):
         
     def run(self):
         
-        while 1:
+        if 1:
             # we explicitly use self.stdin, self.stdout, and self.stderr
             # instead of sys.* so we can unit test this code
             headers, payload = childutils.listener.wait(self.stdin, self.stdout)
@@ -68,16 +68,14 @@ class Dispatcher(object):
     def do_update(self, arg):
         msg = update(arg)
         msg += "\n"
-        msg += invalidate(arg)
-        msg += "\n"
         msg += index(arg)
+        msg += "\n"
+        msg += invalidate(arg)
         return msg
         
-#    def do_invalidate(self, arg):
-#        msg = update(arg)
-#        msg += invalidate(arg)
-#        return msg
-#    
+    def do_invalidate(self, arg):
+        return invalidate(arg)
+        
     def do_index(self, arg):
         return index(arg)
         
