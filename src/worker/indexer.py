@@ -1,6 +1,8 @@
-import sys,  re  #, logging
+import os, sys,  re  #, logging
+import time
 import xappy
 
+#os.environ["LOGGING_DEBUG"] =  "1"
 from sensible.loginit import logger
 
 log = logger(__name__)
@@ -39,6 +41,7 @@ def indexer_connection(index_path=index_path, indexer=None):
     indexer.add_field_action('type', xappy.FieldActions.INDEX_EXACT)
     indexer.add_field_action('alpha', xappy.FieldActions.INDEX_EXACT)
     indexer.add_field_action('language', xappy.FieldActions.INDEX_EXACT)
+    indexer.add_field_action('genre', xappy.FieldActions.INDEX_EXACT)
     indexer.add_field_action('sortable_title', xappy.FieldActions.SORTABLE)
     indexer.add_field_action('hidden', xappy.FieldActions.INDEX_EXACT)
     #indexer.add_field_action('modified', xappy.FieldActions.SORTABLE, type='data')
@@ -47,6 +50,7 @@ def indexer_connection(index_path=index_path, indexer=None):
     indexer.add_field_action('title', xappy.FieldActions.STORE_CONTENT)
     indexer.add_field_action('alpha', xappy.FieldActions.STORE_CONTENT)
     indexer.add_field_action('language', xappy.FieldActions.STORE_CONTENT)
+    indexer.add_field_action('genre', xappy.FieldActions.STORE_CONTENT)
     indexer.add_field_action('type', xappy.FieldActions.STORE_CONTENT)
     indexer.add_field_action('searchable_text', xappy.FieldActions.STORE_CONTENT)
     #indexer.add_field_action('description', xappy.FieldActions.STORE_CONTENT)
@@ -54,105 +58,79 @@ def indexer_connection(index_path=index_path, indexer=None):
 
     return indexer
 
+class Indexer(object):
+    
+    type = ''
+    fields = []
+    
+    def __init__(self, resource):
+        self.resource = resource
+        self.doc = xappy.UnprocessedDocument()
+        log.debug("indexing %s - %s", self.type, self.resource)
+        
+    
+    def document(self):    
+        self.doc.id = self.resource.url
+        self.doc.fields.append(xappy.Field('type', self.type))
+        
+        for field in self.fields:
+            value = getattr(self.resource, field)
+            if value:
+                self.doc.fields.append(xappy.Field(field, value))
 
-class BookIndexer(object):
+        self.add()
+        return self.doc
+    
+    def append(self, field, value):
+        if value:
+            self.doc.fields.append(xappy.Field(field, value))
+        
+class BookIndexer(Indexer):
 
     type = 'Book'
+    fields = ['title', 'alpha', 'author', 'language', 'genre']
     
-    def __init__( self, resource):
-        self.resource = resource
-        log.debug("%s - indexing %r", self.__class__.__name__, self.resource)
-
-    def document(self, connection):
-        doc = xappy.UnprocessedDocument()
-        title = self.resource.title
-        alpha = self.resource.alpha
-        author = self.resource.author
-        language = self.resource.language
-        #keywords = self.resource.keywords
-        #modified = self.resource.modified
-        searchable_text = title
-
-        #log.debug("st: %d\n%s\n" % (len(searchable_text), searchable_text[:500]) )
-        doc.fields.append(xappy.Field('type', self.type))
-        if title:
-            doc.fields.append(xappy.Field('title', title))
-            doc.fields.append(xappy.Field('sortable_title', sortable(title)))
-
-        if alpha:
-            doc.fields.append(xappy.Field('alpha', alpha))
-
-        if language:
-            doc.fields.append(xappy.Field('language', language))
-            
-        #if keywords:
-        #    for keyword in keywords:
-        #        doc.fields.append(xappy.Field('keywords', keyword))
-
-        if author:
-            doc.fields.append(xappy.Field('author', author))
-
-#        if modified:
-#            try:
-#                #date = datetime.datetime(*time.strptime(creation_date[0], "%Y-%m-%d %H:%M:%S")[0:6])
-#                doc.fields.append(xappy.Field('modified', modified))
-#            except ValueError:
-#                pass
-
-        if searchable_text:
-            doc.fields.append(xappy.Field('searchable_text', searchable_text))
-
-        return doc
+    def add(self):
+        self.append('sortable_title', sortable(self.resource.title))
+        self.append('searchable_text', self.resource.title)
 
 
-class SectionIndexer(object):
+class SectionIndexer(Indexer):
 
     type = 'Section'
-     
-    def __init__( self, resource):
-        self.resource = resource
-        log.debug("%s - indexing %r", self.__class__.__name__, self.resource)
-
-    def document(self, connection):
-        doc = xappy.UnprocessedDocument()
-
-        if self.resource.hidden:
-            hidden = '1'
-        else: 
-            hidden = '0'
-            
-        doc.fields.append(xappy.Field('type', self.type))
-        doc.fields.append(xappy.Field('hidden', hidden))
+    
+    def add(self):
+    
+        hidden = self.resource.hidden and '1' or '0'          
+        self.doc.fields.append(xappy.Field('hidden', hidden))
                           
         if hidden == '0':
             title = self.resource.title
-            searchable_text = self.resource.astext()
-
-            if title:
-                doc.fields.append(xappy.Field('title', title))
-                doc.fields.append(xappy.Field('sortable_title', sortable(title)))
-    
-            if searchable_text:
-                doc.fields.append(xappy.Field('searchable_text', searchable_text))
-
-        return doc
-    
+            self.append('title', title)
+            self.append('sortable_title', sortable(title))
+            self.append('searchable_text', self.resource.astext())
+            self.append('author', self.resource.book.author)
+            self.append('language', self.resource.book.language)
+            self.append('genre', self.resource.genre)
+            
 def index(bookid):
+    t1 = time.time()
     connection = indexer_connection(index_path)
-    book = books.get_book(bookid)
+    try:
+        book = books.get_book(bookid)
     
-    for obj in book.walk():
-        indexer = globals().get("%sIndexer" % obj.__class__.__name__, None)
-        if indexer is None:
-            raise KeyError("Indexer for object %s not found." % obj.__class__.__name__)
-
-        doc = indexer(obj).document(connection)
-        doc.id = obj.__name__
+        for obj in book.walk():
+            indexer = globals().get("%sIndexer" % obj.__class__.__name__, None)
+            if indexer is None:
+                raise KeyError("Indexer for object %s not found." % obj.__class__.__name__)
     
-        connection.replace(doc)
-    
-    connection.flush()
-    connection.close()
+            doc = indexer(obj).document()
+            connection.replace(doc)
+    finally:
+        connection.flush()
+        connection.close()
+    t2 = time.time()
+    return 'Book %s indexed in %0.2f' % (bookid, (t2-t1))
 
 if __name__ == '__main__':
     n = len(sys.argv)
