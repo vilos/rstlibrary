@@ -8,8 +8,8 @@
   <div id="colophon" tal:condition="book">
   <tal:block define="title book.title;
                      author book.author;
-                     publisher book.info.publisher;
-                     year book.info.year">
+                     publisher book.info.get('publisher','');
+                     year book.info.get('year', '')">
     <p class="byline" tal:condition="author">by ${author}</p>
     <p>Welcome to the home of ${title} <tal:block tal:condition="author">  by ${author}</tal:block>.<br/>
     <tal:block condition="publisher or year">First published
