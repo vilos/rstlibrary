@@ -1,26 +1,24 @@
 import sys
-from log import log
+from sensible.loginit import logger
 from jsonrpc import Client
-         
-def invalidate(bookid, url='http://www.srichinmoylibrary.com/invalidate'):
+from library import configure
+
+log = logger(__name__)
+
+def invalidate(bookid):
+    config = configure()
+    url = config.get('invalidate_url')
     data = dict(bookid=bookid)
-    
-    log("jsonrpc - sending: %r", data)
+    log.debug("sending invalidating request: %r to %s", data, url)
     client = Client(url)
     return client.send(data)
     
 if __name__ == '__main__':
-    url = ''
-    if len(sys.argv) > 2:
-        url, bookid = sys.argv[1:]
-        
-    elif len(sys.argv) > 1:
+    bookid = ''
+    if len(sys.argv) > 1:
         bookid = sys.argv[1]
         
     if bookid:
-        if url:
-            print invalidate(bookid, url)
-        else:
-            print invalidate(bookid)
+        print invalidate(bookid)
     else:
         print 'bookid ?'

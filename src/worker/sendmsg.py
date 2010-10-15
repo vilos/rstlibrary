@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 from log import log
 from jsonrpc import Client

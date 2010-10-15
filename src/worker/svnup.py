@@ -1,5 +1,6 @@
 import os, sys
 import pysvn
+from library import configure
 
 from sensible.loginit import logger
 
@@ -34,10 +35,9 @@ class SvnCommand(object):
             self.path = os.path.dirname(self.path)
             if not os.path.exists(self.path):
                 raise ValueError('Path %s does not exist.' % self.path )
-
+        log.info('svn updating: %s', self.path)
         self.revision_update_complete = None
         self.client.update(self.path)
-
         if self.revision_update_complete is not None:
             log.info('Checked out revision %s' % self.revision_update_complete.number)
         else:
@@ -87,7 +87,15 @@ class SvnCommand(object):
         return False
 
 
-def update(bookid, base='var/vslib'):
+def update(bookid):
+    config = configure()
+    base = config.get('src_path')
+    prefix = 'file:/'
+    if base.startswith(prefix):
+        base = base[len(prefix)-1:]
+    base = os.path.realpath(base)
+    if not os.path.exists(base):
+        raise ValueError('Path not found: %s', base)
     
     svn = SvnCommand(base)
     try:
