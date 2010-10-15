@@ -28,7 +28,7 @@
         <ul>
             <li tal:repeat="result results">
               <div class="link">
-                <a href="${result.id}">
+                <a href="${base_url()}/${result.id}">
                     ${result.title}
                 </a>
               </div>
