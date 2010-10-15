@@ -1,15 +1,11 @@
 import os, sys,  re  #, logging
 import time
 import xappy
+from sensible.loginit import logger
 import books
 from conf import configure
 
-#os.environ["LOGGING_DEBUG"] =  "1"
-from sensible.loginit import logger
-
 log = logger(__name__)
-
-#log = logging.getLogger(__name__)
 
 num_sort_regex = re.compile('\d+')
 

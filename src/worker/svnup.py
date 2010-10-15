@@ -31,8 +31,10 @@ class SvnCommand(object):
             
     def up(self, path=''):
         self.extend_path(path)
+        log.debug('updating: %s', self.path)
         if not os.path.exists(self.path):
             self.path = os.path.dirname(self.path)
+            log.debug('updating: %s', self.path)
             if not os.path.exists(self.path):
                 raise ValueError('Path %s does not exist.' % self.path )
         msg = 'svn up: %s' % self.path

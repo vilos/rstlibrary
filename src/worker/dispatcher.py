@@ -8,7 +8,6 @@ import sys,os
 from supervisor import childutils
 
 import jsonrpc
-from sensible.loginit import logger
 from svnup import update
 from invalidate import invalidate
 from catalog import index
@@ -16,6 +15,8 @@ import socket
 
 conf = dict(SUPERVISOR_SERVER_URL='http://127.0.0.1:9001')
 broker_url = 'http://127.0.0.1:7007/get'
+
+from sensible.loginit import logger
 log = logger(os.path.basename(__file__))
 
 class Dispatcher(object):
