@@ -127,7 +127,7 @@ def index(bookid, index_path=None):
         connection.flush()
         connection.close()
     t2 = time.time()
-    return 'Book %s indexed in %0.2f' % (bookid, (t2-t1))
+    return '%s indexed in %0.2f' % (bookid, (t2-t1))
 
 if __name__ == '__main__':
     n = len(sys.argv)

@@ -35,13 +35,14 @@ class SvnCommand(object):
             self.path = os.path.dirname(self.path)
             if not os.path.exists(self.path):
                 raise ValueError('Path %s does not exist.' % self.path )
-        log.info('svn updating: %s', self.path)
+        msg = 'svn up: %s' % self.path
         self.revision_update_complete = None
         self.client.update(self.path)
         if self.revision_update_complete is not None:
-            log.info('Checked out revision %s' % self.revision_update_complete.number)
+            msg += ' - at revision %s' % self.revision_update_complete.number
         else:
-            log.warning('Checked out unknown revision - checkout failed?')
+            msg += ' - unknown revision - update failed?'
+        return msg
         
     def checkout(self, path=''):
         self.extend_path(path)
@@ -75,7 +76,7 @@ class SvnCommand(object):
             self.revision_update_complete = arg_dict['revision']
         elif arg_dict['path'] != '' and arg_dict['action']  is not None:
             msg = '%s %s\n' % ( arg_dict['action'], arg_dict['path'])
-            log.info(msg)
+            log.debug(msg)
                 
     def callback_getLogin(self, realm, username, may_save):
         log.error('Login required')
@@ -98,12 +99,8 @@ def update(bookid):
         raise ValueError('Path not found: %s', base)
     
     svn = SvnCommand(base)
-    try:
-        svn.up(bookid)
-    except ValueError:
-        svn.checkout(bookid)
-        
-    return ""
+    return svn.up(bookid)
+
 
 if __name__=='__main__':
     arg = ''

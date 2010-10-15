@@ -69,4 +69,4 @@ def update_view(request):
         pass
     # load from source
     book.doctree
-    return {'result': 'Book %s invalidated.' % book.id }
+    return {'result': '%s invalidated.' % book.id }
