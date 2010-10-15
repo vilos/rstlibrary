@@ -66,8 +66,8 @@ class Dispatcher(object):
                     
             childutils.listener.ok(self.stdout)
             
-    def do_update(self, arg):
-        return '\n\t'.join(['', update(arg), index(arg), invalidate(arg)])
+    def do_update(self, arg, ini='production'):
+        return '\n\t'.join(['', update(arg, ini), index(arg, ini), invalidate(arg, ini)])
         
     def do_invalidate(self, arg):
         return invalidate(arg)

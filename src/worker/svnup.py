@@ -90,8 +90,8 @@ class SvnCommand(object):
         return False
 
 
-def update(bookid):
-    config = configure()
+def update(bookid, ini='develop'):
+    config = configure(ini)
     base = config.get('src_path')
     prefix = 'file:/'
     if base.startswith(prefix):

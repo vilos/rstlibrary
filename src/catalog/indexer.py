@@ -106,8 +106,9 @@ class SectionIndexer(Indexer):
             self.append('language', self.resource.book.language)
             self.append('genre', self.resource.genre)
             
-def index(bookid, index_path=None):
+def index(bookid, ini='develop'):
     t1 = time.time()
+    index_path = configure(ini)
     connection = indexer_connection(index_path)
     try:
         book = books.get_book(bookid)
