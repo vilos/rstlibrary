@@ -69,11 +69,11 @@ class Dispatcher(object):
     def do_update(self, arg, ini='production'):
         return '\n\t'.join(['', update(arg, ini), index(arg, ini), invalidate(arg, ini)])
         
-    def do_invalidate(self, arg):
-        return invalidate(arg)
+    def do_invalidate(self, arg, ini='production'):
+        return invalidate(arg, ini)
         
-    def do_index(self, arg):
-        return index(arg)
+    def do_index(self, arg, ini='production'):
+        return index(arg, ini)
         
         
 def main():
