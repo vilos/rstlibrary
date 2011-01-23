@@ -214,7 +214,8 @@ class Book(Section):
     
     @property
     def language(self):
-        return self.info.get('language', None)        
+        """ language of the book, english if not specified """
+        return self.info.get('language', 'en')        
 
     @property
     def genre(self):
