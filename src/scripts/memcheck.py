@@ -19,7 +19,7 @@ def get_ps(name='uwsgi', username='vslib'):
     return ps
 
     
-def check(rsslimit=500):
+def check(rsslimit=390):
     # sum rss of given processes
     rss = 0
     ps = get_ps()

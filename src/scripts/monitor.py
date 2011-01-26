@@ -28,13 +28,8 @@ def get_info(signl, frme):
 signal.signal(signal.SIGINT, shutdown )
 signal.signal(signal.SIGUSR1, get_info)
 
-def job_function():
-    #print "Hello World"
-    dt = datetime.now()
-    print dt.strftime("%d. %B %Y %H:%M:%S")
 
 # Schedule job_function to be called every two hours
-#sched.add_interval_job(job_function, seconds=10, repeat=0)
 sched.add_interval_job(check, seconds=180, repeat=0)
 sched.start()
 
