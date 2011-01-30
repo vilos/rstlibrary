@@ -48,7 +48,7 @@ class X(object):
         query = conn.query_field('type', 'Book')
         query = query and conn.query_field('language', language)
         aset = set()
-        for brain in conn.search(query, self.start, self.limit, checkatleast=-1):
+        for brain in conn.search(query, 0, 9999, checkatleast=-1):
             alpha =  brain.data['alpha'][0]
             if not alpha.isalnum():
                 print "Not an alpha:"
