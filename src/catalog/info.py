@@ -13,6 +13,7 @@ class X(object):
     def __init__(self, index_path=None):
         if not index_path:
             index_path=configure()
+        self.index_path = index_path
         self.connection = xappy.SearchConnection(index_path)
         print "index at", index_path
         
@@ -41,6 +42,12 @@ class X(object):
         conn = self.connection
         doc = conn.get_document(id)
         print doc.data
+        
+    def alphas(self):
+        #from books.library.catalog import CatalogSearch
+        cs = books.library.catalog.CatalogSearch(self.index_path)
+        print cs.alphas('en')
+        
      
 
 def info(index_path=None):
