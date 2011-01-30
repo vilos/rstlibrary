@@ -29,16 +29,14 @@ class CatalogSearch(object):
         self.pool = ConnectionPool(database)
         self.n = n      # results per page
         
-    def alphas(self):
+    def alphas(self, language='en'):
         conn = self.pool.get_connection()
         query = conn.query_field('type', 'Book')
-        
-        #ndoc = conn.get_doccount()
-        #query = conn.query_all()
+        query = query and conn.query_field('language', language)
         aset = set()
-        for brain in conn.search(query, self.start, self.limit, checkatleast=-1):
-            #if brain.data.has_key('alpha'):
+        for brain in conn.search(query, self.start, self.limit, checkatleast=-1):                
             aset.add(brain.data['alpha'][0])
+
         return sorted(aset)
     
     def books(self, alpha=''):
