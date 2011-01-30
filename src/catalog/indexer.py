@@ -2,6 +2,7 @@ import os, sys,  re  #, logging
 import time
 import xappy
 from sensible.loginit import logger
+from scripts.timing import print_timing
 import books
 from conf import configure
 
@@ -61,7 +62,14 @@ class Indexer(object):
         self.resource = resource
         self.doc = xappy.UnprocessedDocument()
         log.debug("indexing %s - %s", self.type, self.resource)
-        
+
+    @staticmethod    
+    def get(obj):
+        klass = obj.__class__.__name__
+        indexer = globals().get("%sIndexer" % klass, None)
+        if indexer is None:
+            raise KeyError("Indexer for object %s not found." % klass)
+        return indexer
     
     def document(self):    
         self.doc.id = self.resource.url
@@ -105,27 +113,38 @@ class SectionIndexer(Indexer):
             self.append('author', self.resource.book.author)
             self.append('language', self.resource.book.language)
             self.append('genre', self.resource.genre)
-            
-def index(bookid, index_path='', ini='develop'):
-    t1 = time.time()
-    if not index_path:
-        index_path = configure(ini)
+
+@print_timing
+def index_books(index_path, ids):
     connection = indexer_connection(index_path)
     try:
-        book = books.get_book(bookid)
-    
+        for bookid in ids:
+            book = books.get_book(bookid)
+            doc = BookIndexer(book).document()
+            connection.replace(doc)
+            print 'indexed book:', bookid
+    finally:
+        connection.flush()
+        connection.close()
+
+@print_timing
+def index(bookid, index_path):
+    connection = indexer_connection(index_path)
+    try:
+        book = books.get_book(bookid)    
         for obj in book.walk():
-            indexer = globals().get("%sIndexer" % obj.__class__.__name__, None)
-            if indexer is None:
-                raise KeyError("Indexer for object %s not found." % obj.__class__.__name__)
-    
+            indexer = Indexer.get(obj)
             doc = indexer(obj).document()
             connection.replace(doc)
     finally:
         connection.flush()
         connection.close()
-    t2 = time.time()
-    return '%s indexed in %0.2f' % (bookid, (t2-t1))
+
+def main(bookid, index_path='', ini='develop'):
+    if not index_path:
+        index_path = configure(ini)
+    return index(bookid, index_path)
+
 
 if __name__ == '__main__':
     n = len(sys.argv)
@@ -133,5 +152,5 @@ if __name__ == '__main__':
     if n > 1:
         bookid = sys.argv[1]
     if bookid:
-        print index(bookid)
+        print main(bookid)
     
