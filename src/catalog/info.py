@@ -43,11 +43,19 @@ class X(object):
         doc = conn.get_document(id)
         print doc.data
         
-    def alphas(self):
-        #from books.library.catalog import CatalogSearch
-        cs = books.library.catalog.CatalogSearch(self.index_path)
-        print cs.alphas('en')
-        
+    def alphas(self, language='en'):
+        conn = self.connection
+        query = conn.query_field('type', 'Book')
+        query = query and conn.query_field('language', language)
+        aset = set()
+        for brain in conn.search(query, self.start, self.limit, checkatleast=-1):
+            alpha =  brain.data['alpha'][0]
+            if not alpha.isalnum():
+                print "Not an alpha:"
+                print brain.data               
+            aset.add(alpha)
+            
+        print sorted(aset)
      
 
 def info(index_path=None):

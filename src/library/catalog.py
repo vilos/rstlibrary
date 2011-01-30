@@ -36,7 +36,6 @@ class CatalogSearch(object):
         aset = set()
         for brain in conn.search(query, self.start, self.limit, checkatleast=-1):                
             aset.add(brain.data['alpha'][0])
-
         return sorted(aset)
     
     def books(self, alpha=''):
