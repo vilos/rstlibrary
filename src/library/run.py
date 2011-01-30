@@ -29,7 +29,7 @@ def app(global_config, **settings):
     config.begin()
     config.load_zcml(zcml_file)
     
-    register_source(src_path)
+    register_source(src_path,  encoding='utf_8_sig')
     register_store(store_url, cache_url, max_entries=max_entries)
     register_catalog(database)
     config.end()
