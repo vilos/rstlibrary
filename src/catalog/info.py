@@ -51,8 +51,8 @@ class X(object):
         for brain in conn.search(query, 0, 9999, checkatleast=-1):
             alpha =  brain.data['alpha'][0]
             if not alpha.isalnum():
-                print "Not an alpha:"
-                print brain.data               
+                print "Not an alpha:%r - id: %s, title: %s" % (brain.alpha, brain.id, brain.data['title'])  
+                               
             aset.add(alpha)
             
         print sorted(aset)
