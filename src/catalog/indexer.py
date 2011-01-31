@@ -140,8 +140,8 @@ def index_all(bookid, index_path):
         connection.flush()
         connection.close()
 
-def index(bookid, ini='develop'):
-    index_path = configure(ini)
+def index(bookid, **kw):
+    index_path = configure(**kw)
     return index_all(bookid, index_path)
 
 

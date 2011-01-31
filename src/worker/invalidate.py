@@ -5,8 +5,8 @@ from library import configure
 
 log = logger(__name__)
 
-def invalidate(bookid, ini='develop'):
-    config = configure(ini)
+def invalidate(bookid, **kw):
+    config = configure(**kw)
     url = config.get('invalidate_url')
     data = dict(bookid=bookid)
     log.debug("sending invalidating request: %r to %s", data, url)

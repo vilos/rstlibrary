@@ -1,7 +1,7 @@
 from paste.deploy.loadwsgi import appconfig
 import os
 
-DEFAULT_INIFILE = 'develop'
+DEFAULT_INIFILE = 'production'
 
 def configure(inifile=None):
     if not inifile:
