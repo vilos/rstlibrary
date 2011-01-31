@@ -2,7 +2,7 @@
 import sys, os
 import signal
 
-from indexer import index
+from indexer import index_all
 from conf import configure
 from info import indexed
 
@@ -48,7 +48,7 @@ if __name__=='__main__':
         for id in ids:
             #print 'Sending: put', id
             #send('put', cmd='index', arg=id)
-            msg = index(id, index_path)
+            msg = index_all(id, index_path)
             log.info(msg)
             if not keep_processing:
                 break

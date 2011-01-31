@@ -128,7 +128,7 @@ def index_books(index_path, ids):
         connection.close()
 
 @print_timing
-def index(bookid, index_path):
+def index_all(bookid, index_path):
     connection = indexer_connection(index_path)
     try:
         book = books.get_book(bookid)    
@@ -140,10 +140,9 @@ def index(bookid, index_path):
         connection.flush()
         connection.close()
 
-def main(bookid, index_path='', ini='develop'):
-    if not index_path:
-        index_path = configure(ini)
-    return index(bookid, index_path)
+def index(bookid, ini='develop'):
+    index_path = configure(ini)
+    return index_all(bookid, index_path)
 
 
 if __name__ == '__main__':
@@ -152,5 +151,5 @@ if __name__ == '__main__':
     if n > 1:
         bookid = sys.argv[1]
     if bookid:
-        print main(bookid)
+        print index(bookid)
     
