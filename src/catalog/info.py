@@ -51,7 +51,7 @@ class X(object):
         for brain in conn.search(query, 0, 9999, checkatleast=-1):
             alpha =  brain.data['alpha'][0]
             if not alpha.isalnum():
-                print "Not an alpha:%r - id: %s, title: %s" % (brain.alpha, brain.id, brain.data['title'])  
+                print "Not an alpha:%r - id: %s, title: %s" % (brain.data['alpha'][0], brain.id, brain.data['title'][0])  
                                
             aset.add(alpha)
             
