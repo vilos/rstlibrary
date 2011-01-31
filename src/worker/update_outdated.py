@@ -1,7 +1,7 @@
 """ send books changed in svn repo but not updated in live wc """
 import sys, os
 from svnup import SvnCommand
-from jsontest import send
+from sendmsg import send
 
 def getid(path):
     base = os.path.basename(path)
