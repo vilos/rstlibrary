@@ -10,7 +10,7 @@ def send(adr, **kw):
 
     url = host + adr
     client = Client(url)
-    log("jsonreq: %s", url)
+    log("jsonreq: %s %s", url, kw)
     msg = client.send(kw)
     return msg
     
