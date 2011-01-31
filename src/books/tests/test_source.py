@@ -13,6 +13,7 @@ class TestSourceStore(unittest.TestCase):
 
         #source
         self.srcdir = os.path.join(self.vardir, 'test')
+        
         from books.source import SourceStore
         self.store = SourceStore('file:/' + self.srcdir)
         
@@ -20,7 +21,26 @@ class TestSourceStore(unittest.TestCase):
         from shutil import rmtree
         if os.path.exists(self.vardir):
             rmtree(self.vardir)
-                
+        
+    def test_bom(self):
+        import codecs
+        if not os.path.exists(self.srcdir):
+            os.makedirs(self.srcdir, 0777)
+        fpath = os.path.join(self.srcdir,"temp")
+        os.mkdir(fpath)
+        fpath = os.path.join(fpath, 'temp.txt')
+        src = u"""Some title
+==========
+        
+dwwefwef ewfwefewfd
+        """
+        file = open(fpath, "w")
+        file.write(codecs.BOM_UTF8)
+        file.write(src.encode('utf-8'))
+        file.close()
+        self.assertFalse(self.store['temp'].startswith(u'0xffef'), self.store['temp'])
+        self.assertEqual(self.store['temp'], src, self.store['temp'])
+        
     def test_set_get(self):
         self.assertEqual(repr(self.store), '{}')
         self.store['max'] = '3ěščřž'.decode('UTF-8')

@@ -15,6 +15,6 @@ def configure(inifile=None):
     cache_url = config.get('cache_url')
     max_entries = config.get('max_entries')
     # encoding utf_8_sig handles bom signature
-    register_source(src_path, encoding='utf_8_sig') 
+    register_source(src_path) 
     register_store(store_url, cache_url, max_entries=max_entries)
     return config

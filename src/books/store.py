@@ -45,7 +45,7 @@ class Base(object):
 
     def __init__(self, engine, **kw):
         self._binary = kw.get('binary', False)
-        self._encoding = kw.get('encoding', 'UTF-8')
+        self._encoding = kw.get('encoding', 'utf_8_sig')
         self._compress = kw.get('compress', False)
 
     def __getitem__(self, key):
