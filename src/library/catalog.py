@@ -34,8 +34,10 @@ class CatalogSearch(object):
         query = conn.query_field('type', 'Book')
         query = query and conn.query_field('language', language)
         aset = set()
-        for brain in conn.search(query, self.start, self.limit, checkatleast=-1):                
-            aset.add(brain.data['alpha'][0])
+        for brain in conn.search(query, self.start, self.limit, checkatleast=-1):
+            if 'alpha' in brain.data:             
+                aset.add(brain.data['alpha'][0])
+                
         return sorted(aset)
     
     def books(self, alpha=''):
