@@ -10,4 +10,5 @@
 .settings
 #
 paster
-
+nohup.out
+uwsgi.log
