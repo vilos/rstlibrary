@@ -10,7 +10,11 @@
   <div class="document">
     <div tal:replace="structure contents">contents</div>
   </div>
-  <div id="bookexcerpt">Excerpt from <a href="${uplink.url}">${uplink.title}</a> by ${uplink.author}</div>
+  <div id="bookexcerpt">
+    ${uplink.author}, <em>${uplink.title},</em>
+    <tal:block condition="uplink.publisher">${uplink.publisher},</tal:block>
+    ${uplink.year}.
+  </div>
   <div id="listingBar"  tal:condition="nextlink or prevlink">
       <span tal:condition="prevlink" class="listingPrevious">
         <a href="${prevlink.url}" title="${prevlink.title}" tabindex="1">Previous</a>
