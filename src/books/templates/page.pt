@@ -3,10 +3,13 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <metal:block use-macro="base.macros.master">
+  <metal:block fill-slot="uplinks">
+    <div id="uplink" class="small">
+      <a href="/">Home</a> |
+      <a href="${uplink.url}">${uplink.title}</a>
+    </div>
+  </metal:block>
   <metal:block fill-slot="content">
-  <div id="uplink">
-    <a href="${uplink.url}" title="${uplink.title}"> Home </a>
-  </div>
   <div class="document">
     <div tal:replace="structure contents">contents</div>
   </div>

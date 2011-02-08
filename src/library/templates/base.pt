@@ -30,6 +30,7 @@
         <div class="small"><a href="/search">Advanced search</a></div>
       </div>
       </metal:block>
+      <metal:block define-slot="uplinks"></metal:block>
     </div>
   </div>
   <!-- end header -->

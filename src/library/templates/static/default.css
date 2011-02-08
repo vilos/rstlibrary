@@ -33,6 +33,9 @@ body {
   float: right;
   margin-top: 12px;
 }
+#uplink {
+  clear: both;
+}
 #wrapper {
   clear: both;
   padding: 0;
@@ -58,7 +61,6 @@ p, ul, ol {
 .small {
   font-size: 0.8em;
   line-height: 1.875em;
-  margin-bottom: 1.875em;
 }
 a:focus, 
 a:hover     { color: #000; }
