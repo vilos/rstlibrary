@@ -1,8 +1,9 @@
-vslibrary
+rstlibrary
+==========
 
-Web application using repoze.bfg framework for displaying books in restructured text format. 
+Web application based on repoze.bfg framework displaying books written in restructured text format. 
 
-Subapplications:
+Packages:
 - library
 	dispatch, search
 - books

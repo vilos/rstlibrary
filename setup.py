@@ -13,9 +13,9 @@ requires = [
             'WebError'
             ]
 
-setup(name='vslibrary',
+setup(name='rstlibrary',
       version='0.1.0',
-      description='vslibrary',
+      description='rstlibrary',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
         "Programming Language :: Python",

@@ -12,9 +12,9 @@ class ViewTests(unittest.TestCase):
         self.config.end()
 
     def test_my_view(self):
-        from vslibrary.views import my_view
+        from library.views import my_view
         request = testing.DummyRequest()
         info = my_view(request)
-        self.assertEqual(info['project'], 'vslibrary')
+        self.assertEqual(info['project'], 'library')
 
 

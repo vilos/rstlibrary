@@ -9,5 +9,5 @@ def configure(ini=None):
     path = '%s.ini' % ini
     config_path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', path))
     base, name = os.path.split(config_path)
-    config = appconfig('config:%s' % name, name='vslibrary', relative_to=base)
+    config = appconfig('config:%s' % name, name='rstlibrary', relative_to=base)
     return config
